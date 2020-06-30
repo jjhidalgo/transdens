@@ -1002,7 +1002,7 @@ C_________________________ Initializes array ALFA, containing leakage coeff.
      &,VJAC      ,VOBSC     ,WATVOL      ,WORK     ,WTOBSN  ,WTOBST
      &,XNORVD    ,DVDP      ,IOLG_PAR    ,IOCTRA   ,HINI,WSPECHEAT
      &,WTHERMCON
-     ;,IDIMWGT   ,WGT_PAR  ,IPNT_PAR,IPOS     ,DERIV)
+     ;,IDIMWGT   ,WGT_PAR  ,IPNT_PAR,IPOS     ,DERIV ,PARNAME)
 
        END IF
 
