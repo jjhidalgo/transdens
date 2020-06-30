@@ -28,8 +28,22 @@
 *
 *******************************************************************************
 
-      IMPLICIT REAL*8 (A-H,O-Z)
+      IMPLICIT NONE
 
+C------------------------- External
+
+      INTEGER*4::IDIMBB   ,IDIMDERC ,IDIMDERH ,INEW     ,INEWH
+     &          ,IOLDH    ,IOVRWC   ,IPAR     ,LMXNDL   ,NPAR
+     &          ,NPARF    ,NPPEL    ,NUMEL    ,NUMNP
+
+      REAL*8::DTH,THETAT
+
+      INTEGER*4::LDIM(NUMEL),LNNDEL(NUMEL),KXX(LMXNDL,NUMEL)
+
+      REAL*8::AREA(NUMEL)               ,BIBI(IDIMBB,NUMEL)
+     &       ,CAUX1(NUMNP)              ,CAUX2(NUMNP)
+     &       ,DERC(NUMNP,NPAR,IDIMDERC) ,DERH(NUMNP,NPARF,IDIMDERH)
+     &       ,PAREL(NUMEL,NPPEL)
 
       DTH=1.D0-THETAT
 

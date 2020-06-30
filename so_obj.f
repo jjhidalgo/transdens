@@ -252,8 +252,7 @@ C_____ Step 1.1.1: Calculate the contrib. of device to penalty criterion
                DEVICESTAT(7,OBSCLASS(ITYPMEAS,ND)) = CONTRIBDEV
      ;(IDIMCOV  ,NBANDCOV ,NOF      ,NOFOBS   ,NUMTOBS
      ;,COVINV   ,RESID)
-
-                        
+                      
                 
 C_________________________________ Step 1.1.2: Add contribution to obj. function
 

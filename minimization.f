@@ -6,7 +6,8 @@
      ;,OBJPAR   ,XMAXIM   ,COVINV   ,COVPAR    ,DLT_PAR   ,FOBJ_WGT  
      ;,GRAD     ,HESS     ,HESSAUX  ,IFLAGS    ,IOWRITE   ,IPAR_INV
      ;,PAR_INV  ,PARAUX   ,PARC      ,PARGOOD   ,PARM     ,PARZ
-     ;,VJAC     ,VOBS     ,VOBSC     ,WORK      ,WGT_UNK  ,MEASTYP)
+     ;,VJAC     ,VOBS     ,VOBSC     ,WORK      ,WGT_UNK  ,MEASTYP
+     ;,PHI)
 
 C_______________________ Step 0: Declaration of variables
 
@@ -18,7 +19,7 @@ C_______________________ Step 0: Declaration of variables
      ;         ,IOWRITE(NWRITE),IPAR_INV(NPARALG),IFLAGS(NFLAGS)
      ;         ,MEASTYP(NUMTOBS)
                                                                  ! Real external
-      REAL*8 ALF,FNEW,FOLD,GNORM,GNORM1,OBJCON,OBJHED,OBJPAR,XMAXIM
+      REAL*8 ALF,FNEW,FOLD,GNORM,GNORM1,OBJCON,OBJHED,OBJPAR,XMAXIM,PHI
      ;      ,PAR_INV(NPARALG),COVINV(IDIMCOV),COVPAR(NPAR*(NPAR+1)/2)
      ;      ,DLT_PAR(NPAR),FOBJ_WGT(NSTAT),WORK(2*NPAR),WGT_UNK(NPAR)
      ;      ,GRAD(NPAR),HESS(NPAR*(NPAR+1)/2),HESSAUX(NPAR*(NPAR+1)/2)
@@ -39,8 +40,8 @@ C_________________________________Only Marquardt's method is operative
      ;,PAR_INV(2) ,PAR_INV(1)  ,XMAXIM      ,COVINV      ,COVPAR      
      ;,DLT_PAR    ,FOBJ_WGT    ,GRAD        ,HESS        ,HESSAUX     
      ;,IFLAGS     ,PARAUX      ,PARC        ,PARGOOD     ,PARM
-     ;,PARZ        ,VJAC        ,VOBS        ,VOBSC      ,WGT_UNK
-     ;,WORK        ,MEASTYP)
+     ;,PARZ        ,VJAC       ,VOBS        ,VOBSC       ,WGT_UNK
+     ;,WORK        ,MEASTYP    ,PHI)
 
       RETURN 
       END

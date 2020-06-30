@@ -343,7 +343,7 @@ C------------------------- in this term (see TRANSDENS Guia rapida, 3.7).
 C------------------------- Computes DTRA matrix if needed
 
                  IF (IOREGIMEN.EQ.0) THEN
-                 
+
                    CALL COMP_DTRA
      &                (ACTH     ,AREA     ,BETAC    ,CAUX1    ,CAUX2
      &                ,CCALAN   ,CCALIT   ,CREF     ,DENSITY  ,DENSREF

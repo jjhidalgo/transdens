@@ -214,7 +214,7 @@ C------------------------- Checks storage zone number
      ;            CALL ERROR (IERROR,IOWAR,MAINF,FILENAME,
      ;            'INCORRECT STORAGE ZONE NUMBER (LXSTG) ',
      ;             NROW,6,IUGRID,1,3.07)
-      
+     
                 CALL ASS_EVAL(NZSTG,LDSTG,LSTG,LXSTG(NE))            
 
              ELSE  

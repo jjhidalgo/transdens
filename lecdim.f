@@ -379,11 +379,6 @@ C------------------------- Writes in MAIN FILE if allowed
      ; 5X,'IOWAR   =',I5/,
      ; 5X,'IOPART  =',I5)
 
-
-
-
-
-
 C------------------------- Reads I/O options
 C------------------------- Card A3.3, Problem definitions options
 
@@ -416,8 +411,6 @@ C------------------------- Writes in MAIN FILE if allowed
      ; 5X,'NON LINEAR OPTION IN FLOW EQUATION................. =',I5,/,
      ; 5X,'NON LINEAR OPTION IN TRANSPORT EQUATION............ =',I5,/,
      ; 5X,'GEOSTATISTICAL INVERSE PROBLEM OPTION ............. =',I5,/)
-
-    
 
       IF((IOTRS.EQ.0.AND.IOFLLI.NE.0) .OR. (IOEQT.EQ.2.AND.IOFLLI.NE.0))
      ;CALL ERROR(IERROR,IOWAR,MAINF,FILENAME,

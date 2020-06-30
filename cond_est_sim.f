@@ -1,27 +1,26 @@
       SUBROUTINE COND_EST_SIM
      ;(IDIMCROSS_GS    ,IDIMIVARIO_GS    ,IDIMVAR_GS
-     ;,IDIMWGT         ,IDIMWORK         ,IDIMZONPP_GS   ,IOINV          
-     ;,MAINF           ,MXCLOSE_GS       ,MXDISC_GS      ,MXGRPZN        
-     ;,MXKRIG_GS       ,MXMEASPP_GS      ,MXNPP_GS       ,MXNPRIM_GS     
-     ;,MXNVAR_GS       ,MXNZON_GS        ,MXROT_GS       ,MXSAM_GS       
-     ;,MXSB_GS         ,MXZONPP_GS       ,NFLAGS         ,NGROUP_ZN      
-     ;,NPAR            ,NPARDET          ,NTYPAR         ,NUMITER        
-     ;,NZPAR           ,NZTRA            ,PIPOVARIABLE   ,CLOSESAM_GS    
-     ;,COVPAR          ,CROSSCOV_GS      ,ESTKRIG_GS     ,EXDRZN_GS      
-     ;,ICHECK_GS       ,ICROSSCOV_GS     ,IFLAGS         ,IGR_ZONE       
-     ;,INDPAR          ,INORPAR          ,IO_KG_GS       ,IOLG_PAR       
-     ;,IOPT_GS         ,IPNT_END         ,IPNT_PAR       ,IPNT_START     
-     ;,IPOLDRIFT_GS    ,ISOZ             ,ISUPBL_GS      ,IVARIO_GS      
-     ;,IZN_NPP_GS      ,IZN_PP_GS        ,KRIGAUX_GS     ,KRISOL_GS      
-     ;,KRISYS_GS       ,LDIM_GS          ,NUMSB_GS       ,NZONE_PAR      
-     ;,PAR_WGT         ,PARC             ,PARM           ,PARZ           
-     ;,POSDIS_GS       ,POSDISAUX_GS     ,POSMEAS_GS     ,POSZN_GS       
-     ;,ROTMAT_GS       ,SEARCH_GS        ,SUPBL_GS       ,TRIM_GS        
-     ;,VARIO_GS        ,VMEAS_GS         ,VSTATS_GS      ,WGT_PAR        
+     ;,IDIMWGT         ,IDIMWORK         ,IDIMZONPP_GS   ,IOINV
+     ;,MAINF           ,MXCLOSE_GS       ,MXDISC_GS      ,MXGRPZN
+     ;,MXKRIG_GS       ,MXMEASPP_GS      ,MXNPP_GS       ,MXNPRIM_GS
+     ;,MXNVAR_GS       ,MXNZON_GS        ,MXROT_GS       ,MXSAM_GS
+     ;,MXSB_GS         ,MXZONPP_GS       ,NFLAGS         ,NGROUP_ZN
+     ;,NPAR            ,NPARDET          ,NTYPAR         ,NUMITER
+     ;,NZPAR           ,NZTRA            ,PIPOVARIABLE   ,CLOSESAM_GS
+     ;,COVPAR          ,ESTKRIG_GS       ,EXDRZN_GS      
+     ;,ICHECK_GS       ,ICROSSCOV_GS     ,IFLAGS         ,IGR_ZONE
+     ;,INDPAR          ,INORPAR          ,IO_KG_GS       ,IOLG_PAR
+     ;,IOPT_GS         ,IPNT_END         ,IPNT_PAR       ,IPNT_START
+     ;,IPOLDRIFT_GS    ,ISOZ             ,ISUPBL_GS      ,IVARIO_GS
+     ;,IZN_NPP_GS      ,IZN_PP_GS        ,KRIGAUX_GS     ,KRISOL_GS
+     ;,KRISYS_GS       ,LDIM_GS          ,NUMSB_GS       ,NZONE_PAR
+     ;,PAR_WGT         ,PARC             ,PARM           ,PARZ
+     ;,POSDIS_GS       ,POSDISAUX_GS     ,POSMEAS_GS     ,POSZN_GS
+     ;,ROTMAT_GS       ,SEARCH_GS        ,SUPBL_GS       ,TRIM_GS
+     ;,VARIO_GS        ,VMEAS_GS         ,VSTATS_GS      ,WGT_PAR
      ;,WGT_UNK         ,WORK             ,ZNWGT_GS
      ;,IACTSIMUL       ,DATASC_GS        ,IDIMDATASC_GS  ,PARC_GS
      ;,IFLAG_SIMUL     ,COVPAR_GR)
-*     ,IZONMEAS_GS)
 
 C____________________________ Declaration of variables and DEBUG file
 
@@ -44,7 +43,8 @@ C____________________________ Declaration of variables and DEBUG file
      ;         ,IZN_PP_GS(IDIMZONPP_GS),IPNT_PAR(NZPAR*IDIMWGT)
      ;         ,IFLAG_SIMUL(MXZONPP_GS)
                                                                  ! Real external
-      REAL*8 POSMEAS_GS(MXMEASPP_GS,3,2,NGROUP_ZN),TRIM_GS(8,NGROUP_ZN)
+      REAL*8 POSMEAS_GS(MXMEASPP_GS,3,2,NGROUP_ZN)
+     ;      ,TRIM_GS(8,NGROUP_ZN)
      ;      ,VMEAS_GS(MXMEASPP_GS,IDIMVAR_GS,2,NGROUP_ZN)
      ;      ,ESTKRIG_GS(MXZONPP_GS),DATASC_GS(IDIMDATASC_GS,18)
      ;      ,VSTATS_GS(MXNVAR_GS,4,NGROUP_ZN),SEARCH_GS(11,NGROUP_ZN)
@@ -58,8 +58,9 @@ C____________________________ Declaration of variables and DEBUG file
      ;      ,EXDRZN_GS(MXNZON_GS,4,NGROUP_ZN),POSDISAUX_GS(MXDISC_GS,3)
      ;      ,POSZN_GS(MXNZON_GS,3,NGROUP_ZN),PARC_GS(MXNPP_GS,NGROUP_ZN)
      ;      ,WGT_PAR(NZPAR*IDIMWGT),PARZ(NZPAR)
-     ;      ,CROSSCOV_GS(IDIMCROSS_GS,MXZONPP_GS,2)
      ;      ,COVPAR_GR(MXNPP_GS*(MXNPP_GS+1)/2)
+
+      REAL*8, DIMENSION(:,:,:), ALLOCATABLE :: CROSSCOV_GS
 
                                                               ! Integer external
       INTEGER*4 NVAR_GR,NMEAS_GR,NPP_GR,NZN_GR,IO_RDPP_GR,IUSEPP
@@ -72,14 +73,20 @@ C____________________________ Declaration of variables and DEBUG file
      ;         ,NRESTRI
      ;         ,IO_PARC_INI_GR
                                                                  ! Real internal
-      REAL*8 R_DUMMY,D1,D2,GAUPROB,AUXPARZ
+      REAL*8 R_DUMMY,D1,D2,GAUPROB,AUXPARZ, dMaxCov
                                                                  ! Integer internal
-      INTEGER*4 ISEED,ILOOP,ILOOP2
+      INTEGER*4 JPOS,ISEED,ILOOP,ILOOP2
      ;         ,IPOSCOVA_GR,IPOSCOVA
 
+
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: daCovParSec
+
       IF (IFLAGS(21).GT.0.OR.IFLAGS(22).GT.0.OR.IFLAGS(23).GT.0) THEN ! On demand
-         IF (IACTSIMUL.EQ.1 .AND. NUMITER.EQ.1)       ! Beginning of the process
-     ;      OPEN(UNIT=666,FILE='CE_CS_INFO.OUT',STATUS='UNKNOWN')
+
+         IF (IACTSIMUL.EQ.1 .AND. NUMITER.EQ.1) THEN      ! Beginning of the process
+            OPEN(UNIT=666,FILE='CE_CS_INFO.OUT',STATUS='UNKNOWN')
+         END IF
+
          IF (NUMITER.EQ.1) THEN
             WRITE(666,1000) IACTSIMUL
  1000       FORMAT(//,' GEOSTATISTICS INFORMATION. CONDITIONAL' 
@@ -91,13 +98,15 @@ C____________________________ Declaration of variables and DEBUG file
  1001    FORMAT(//,' ITERATION NUMBER: ',I5,/, ' ========= =======')
       END IF
 
+      ALLOCATE(CROSSCOV_GS(IDIMCROSS_GS,MXZONPP_GS,2))
+      CROSSCOV_GS = 0.0D0
+
 C____________________________ LOOP over groups of zones, considering only those
 C____________________________ estimated geostatistically
 
       PIPOVARIABLE=0       ! Flag marking variable position of pilot points
       NTOTALPP=0           ! Total number of pilot points
       DO IGR=1,NGROUP_ZN
-
          IF (IOPT_GS(IGR,2).EQ.1) THEN   ! Estimated geostatistically
 
          IF (IFLAGS(21)+IFLAGS(22)+IFLAGS(23).GT.0) 
@@ -154,6 +163,7 @@ C____________________________ Step 1: Identification of useful variables of curr
                 IPINORPAR=IACTTYPE+7
                 IPNZPAR=IACTTYPE+2
              END IF
+             IPOS=INORPAR(IPINORPAR)          ! Initial position at IGR_ZONE
 
 C____________________________ Step 2: CE / CS of pilot points to measurements. 
 C____________________________         OUTPUTS : - Prior information of pilot points
@@ -211,8 +221,7 @@ C____________________________           and prior information of pilot points
 
                    CALL KRIGING
      ;(IDEBUG                ,IDIMCROSS_GS        ,1                 
-     ;,1                     ,1                   ,KTYPE_GR             
-*     ;,MAINF                 ,MXKRIG_GR           ,MXROT_GR             
+     ;,1                     ,1                   ,KTYPE_GR
      ;,MAINF                 ,MXKRIG_GS           ,MXROT_GR             
      ;,MXSB_GR               ,MXDISC_GS           ,NMEAS_GR             
      ;,1                     ,IVARIO_GS(1,1,IGR)  ,NPP_GR               
@@ -249,7 +258,6 @@ C____________________________           and prior information of pilot points
      ;,POSMEAS_GS(NPP_GR+1,3,1,IGR) ,MXNPRIM_GS   ,MXMEASPP_GS
      ;,R_DUMMY)
 
-
                 ELSE ! Cokriging
                    CONTINUE   ! Not yet
                 END IF ! Kriging / Cokriging
@@ -266,11 +274,10 @@ C____________________________           is calculated
                 CALL ZERO_ARRAY(COVPAR_GR,MXNPP_GS*(MXNPP_GS+1)/2)
 
                 IDEBUG = 0
-
                 CALL COVA_KRIG_MATRIX
      ;(IDIMCOV_GR         ,IDIMCROSS_GS ,1           ,IDEBUG
      ;,MXROT_GR           ,MXDISC_GS    ,1           ,IVARIO_GS(1,1,IGR) 
-     ;,NPP_GR             ,VARIO_GS(1,1,IGR)
+     ;,NPP_GR             ,NRESTRI      ,VARIO_GS(1,1,IGR)
      ;,0                  ,WORK         ,COVPAR_GR
      ;,CROSSCOV_GS(1,1,1) ,IVARIO_GS(1,2,IGR)        
      ;,WORK(NPP_GR*(NPP_GR+1)/2+1)      ,0.0D0       ,VARIO_GS(1,2,IGR)         
@@ -346,7 +353,6 @@ C____________________________                     - Correction of the kriging ma
      ;,VMEAS_GS(NPP_GR+1,MXNVAR_GS+3,2,IGR)
      ;,VMEAS_GS(NPP_GR+1,MXNVAR_GS+4,2,IGR)
      ;,DATASC_GS(1,11),DATASC_GS(1,16))
-*,IZONMEAS_GS(1,IGR),0)
 
 C____________________________  Correction of initial cova matrix of parameters. 
 C____________________________  If CS is used, multiplies *2 the CE cova matrix.
@@ -362,21 +368,43 @@ C____________________________           of current group (COVPAR_GR). It is a bl
 C____________________________           of the global block diagonal cova. matrix 
 C____________________________           of parameters(a priori) 
 
-C____________________________           Inversion
+C____________________________           Inversion. Standardizes first to get rid 
+C____________________________           of some big numbers
+
+               ALLOCATE(daCovParSec(NPP_GR*(NPP_GR+1)/2))
+               daCovParSec = COVPAR_GR        ! Keeps a back-up, just in case LINV1P fails
 
                CALL ZERO_ARRAY(WORK,IDIMWORK)
                CALL EQUAL_ARRAY (WORK,COVPAR_GR,NPP_GR*(NPP_GR+1)/2)
+
+               dMaxCov = MAXVAL(COVPAR_GR)
+               WORK = WORK / dMaxCov          ! Scales covariance matrix
+
                CALL LINV1P (WORK,NPP_GR,COVPAR_GR,D1,D2,IER)
+
       
                IF (IER.EQ.129) THEN
                   WRITE(*,2000) IGR
                   WRITE(MAINF,2000) IGR
  2000             FORMAT(//,' ERROR INVERTING A PRIORI COVARIANCE'
      ;                   ' MATRIX OF PARAMETERS OF GROUP OF ZONES ',I5,/
-     ;                   ,' IT IS NOT POSITIVE DEFINITE. CRITICAL STOP.'
-     ;                   ,/)
-                  STOP 
+     ;                   ,' IT IS NOT POSITIVE DEFINITE.',/
+     ;                   ,' I WILL USE ONLY ITS DIAGONAL. SORRY',/)
+
+
+                  COVPAR_GR = 0.0D0
+                  DO iLoop = 1, npp_gr
+                     jPos = iLoop * (iLoop + 1) / 2
+                     COVPAR_GR(jPos) = 1.0D0 / daCovParSec(jPos) 
+                  END DO
+
+               ELSE        ! Did not fail. Full covariance matrix is re-scaled
+
+                  COVPAR_GR = COVPAR_GR / dMaxCov
+                                 
                END IF 
+      
+               DEALLOCATE(daCovParSec)
 
 C____________________________           Storage at COVPAR
 
@@ -453,7 +481,7 @@ C____________________________         - d) Read at GEO file
 
                 END IF ! IO_PARC_INI_GR.EQ....
 
-                                       ! Saves pilot point values as meas
+                                       ! Saves pilot point values as meas. First part of the VMEAS vector (1:NPP_GR)
 
                 CALL EQUAL_ARRAY
      ;            (VMEAS_GS(1,1,1,IGR),PARC(NPARDET+NTOTALPP+1),NPP_GR)
@@ -484,7 +512,7 @@ C____________________________         OUTPUT : - Initial value of zonal paramete
                    CALL ZERO_ARRAY_I (IZN_PP_GS,IDIMZONPP_GS)
                    CALL ZERO_ARRAY_I (IZN_NPP_GS,MXNZON_GS)
                    CALL ZERO_ARRAY_I (ICHECK_GS,MXNPP_GS)
-                
+
                    IF (IOPSC_GR.EQ.0) THEN   ! CONDITIONAL ESTIMATION
 
                       IDEBUG=0
@@ -507,8 +535,7 @@ C____________________________         OUTPUT : - Initial value of zonal paramete
 
                          CALL KRIGING
      ;(IDEBUG                ,IDIMCROSS_GS        ,0
-     ;,0                     ,0                   ,KTYPE_GR      
-*     ;,MAINF                 ,MXKRIG_GR           ,MXROT_GR       
+     ;,0                     ,0                   ,KTYPE_GR
      ;,MAINF                 ,MXKRIG_GS           ,MXROT_GR       
      ;,MXSB_GR               ,MXDISC_GS           ,NMEAS_GR
      ;,NDISC_GR              ,IVARIO_GS(1,1,IGR)  ,NZN_GR         
@@ -571,7 +598,7 @@ C____________________________         OUTPUT : - Initial value of zonal paramete
                          MXKRIG_GR=MAX0(MAX_1,MAX_2)
 
                          CALL CONDITIONAL_SIMULATION
-     ;(NZN_GR        ,NMEAS_GR    ,MAINF
+     ;(NZN_GR      ,NMEAS_GR    ,MAINF
      ;,MXNPRIM_GS  ,IDIMCROSS_GS
      ;,IO_KG_GS(IGR,15)           ,IACTSIMUL
      ;,IDEBUG        ,KTYPE_GR    ,MXKRIG_GS    ,MXROT_GR    ,MXSBX_GR
@@ -596,7 +623,6 @@ C____________________________         OUTPUT : - Initial value of zonal paramete
      ;,VMEAS_GS(NPP_GR+1,2,2,IGR) ,VMEAS_GS(NPP_GR+1,3,2,IGR)
      ;,VMEAS_GS(NPP_GR+1,4,2,IGR) ,VMEAS_GS(NPP_GR+1,5,2,IGR)       
      ;,DATASC_GS(1,11),DATASC_GS(1,16))
-*,IZONMEAS_GS(1,IGR),1)
 
                       ELSE                      ! UNCONDITIONAL SIMULATION
 
@@ -745,7 +771,7 @@ C____________________________         OUTPUT : - Weights of zonal param. to pilo
 
 C____________________________ Step 4.A: Saves weights and related pilot points
 
-                 NONUSEPP=0
+                NONUSEPP=0
                 DO IZON=1,NZN_GR
                    IUSEPP=0
                    DO ILOOP=1,NMXP_GR
@@ -758,7 +784,7 @@ C____________________________ Step 4.A: Saves weights and related pilot points
                    IF (IUSEPP.EQ.0) NONUSEPP = NONUSEPP + 1
                 END DO ! IZON=1,NZN_GR
 
-                IPOS=INORPAR(IPINORPAR)          ! Initial position at IGR_ZONE
+! 100            IPOS=INORPAR(IPINORPAR)          ! Initial position at IGR_ZONE
                 ISTART=IPOS*IDIMWGT              ! Initial position at IPNT_PAR
                 IPOSDLT_PAR=NPARDET+NTOTALPP
 
@@ -897,34 +923,7 @@ C____________________________         (determ. + pilot points)
 
  3000 FORMAT(7E10.4)
 
-*** ojo, para verificaciones con el ejemplo DET...
-
-*      if (numiter.eq.1) then
-*      parz(1)=4.0
-*      parz(2)=4.0
-*      parz(3)=4.0
-*      parz(4)=4.0
-
-*      parc(1)=-3.0
-*      parc(2)=0.1
-*      parc(3)=4.0
-*      parc(4)=4.0
-*      parc(5)=4.0
-*      parc(6)=4.0
-
-*      do ipos=1,21
-*      covpar(ipos)=0.0
-*      end do
-
-*      covpar(1)=1.0
-*      covpar(3)=1.0
-*      covpar(6)=1.0
-*      covpar(10)=1.0
-*      covpar(15)=1.0
-*      covpar(21)=1.0
-*      end if
-*** fin del ojo
-
+      DEALLOCATE(CROSSCOV_GS)
       RETURN
       END
      

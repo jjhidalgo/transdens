@@ -1,6 +1,6 @@
-      REAL FUNCTION CONTRIBDEV 
-     ;(IDIMCOV  ,NBANDCOV ,NOF      ,NOFOBS   ,NUMTOBS   ,COVINV   
-     ;,RESID)
+      REAL*8 FUNCTION CONTRIBDEV 
+     ;(IDIMCOV  ,NBANDCOV ,NOF      ,NOFOBS   ,NUMTOBS
+     ;,COVINV   ,RESID)
 
 ********************************************************************************
 *

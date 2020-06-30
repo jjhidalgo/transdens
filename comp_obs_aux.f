@@ -105,13 +105,10 @@ C______________________________ Identifies and initialises some variables
 
         IF (IODEVICE(ND,2).GT.0) THEN
           VOBS0=VOBS0+WTOBSN(I)*VAROLD(NNOD)                        ! Value (T-DT)
-*        write(83,*) ' xx',VAROLD(NNOD),VARNEW(NNOD),WTOBSN(I),nnod
           IF (IOINV.GT.0) THEN
             DO NP=1,NPAR
               DVOBS(NP,1)=DVOBS(NP,1)+WTOBSN(I)*DERVAR(NNOD,NP,INEW) ! Der. (T-DT)
               DVOBS(NP,2)=DVOBS(NP,2)+WTOBSN(I)*DERVAR(NNOD,NP,IOLD) ! Der. (T)
-*        write(83,*) ' xx',DVOBS(NP,1),DERVAR(NNOD,NP,INEW),np,nnod
-*     ;      iold,inew,WTOBSN(I),DVOBS(NP,2),DERVAR(NNOD,NP,IOLD),i
             ENDDO
           END IF
         END IF
@@ -124,7 +121,7 @@ C______________________________ Assigns value at TABSOLUT
 C______________________________ Subroutine ends for actual device if all its 
 C______________________________ measurement have been used
 
-        IF (IODEVICE(ND,2).LT.0 .OR. IODEVICE(ND,10).EQ.0) RETURN
+      IF (IODEVICE(ND,2).LT.0 .OR. IODEVICE(ND,10).EQ.0) RETURN
 
 *_______________________Intervals not def. by simulation
 
@@ -132,12 +129,12 @@ C______________________________ measurement have been used
 
         TNX=TIT(IODEVICE(ND,2))                          ! Next integration time
 
-CCC OJO, PARANOIA POR LO DE LOS ERRORES DE REDONDEO
-CCC COMENTADA QUEDA LA ESTRUCTURA ANTIGUA. LA NUEVA ESTA ES MUCHO MEJOR
+C______________________________ The condition in the while loop
+C______________________________ avoids problems with rounding rrors.
+C______________________________ OLD version: (TNX.LE.TABSOLUT .AND. IODEVICE(ND,2).GT.0)
 
         DO WHILE ((DABS(TABSOLUT-TNX).LE.1.E-15*(TABSOLUT+TNX)/2D0 .OR.
      ;      TABSOLUT-TNX.GT.1.0E-15).AND. IODEVICE(ND,2).GT.0)
-*        DO WHILE (TNX.LE.TABSOLUT .AND. IODEVICE(ND,2).GT.0)
 
           IF(TABSOLUT.EQ.TIME(1)) THEN         ! T=0 => All weight on obs. at T=0
             WT=1D0
@@ -153,8 +150,6 @@ CCC COMENTADA QUEDA LA ESTRUCTURA ANTIGUA. LA NUEVA ESTA ES MUCHO MEJOR
           IF (IOINV.GT.0) THEN
             DO NP=1,NPAR
               DVOBS(NP,3)=DVOBS(NP,2)*WT+DVOBS(NP,1)*(1-WT)
-*        write(84,*) ' 2xx',DVOBS(NP,3),WT,np,tinc
-
             ENDDO
           END IF
 
@@ -173,7 +168,7 @@ CCC COMENTADA QUEDA LA ESTRUCTURA ANTIGUA. LA NUEVA ESTA ES MUCHO MEJOR
           ENDIF
 
           VOBSC(NO)=VOBSC(NO)+VOBS1*WTOBST(NO)
-*          write(83,*) no,vobs1,WTOBST(NO),VOBSC(NO),wt
+
           IF (IOINV.GT.0) THEN
             DO NP=1,NPAR
               VJAC(NO,NP)=VJAC(NO,NP)+DVOBS(NP,3)*WTOBST(NO)
@@ -184,12 +179,10 @@ CCC COMENTADA QUEDA LA ESTRUCTURA ANTIGUA. LA NUEVA ESTA ES MUCHO MEJOR
 
 *_____________Number of integr. times not exceeded
 
-*          IF(IODEVICE(ND,2).LT.(IODEVICE(ND+1,2))) THEN
           IF(NOOBSIT(IODEVICE(ND,2)).LT.IODEVICE(ND+1,8) .AND.
      ;       IODEVICE(ND,2).LE.NUMTIT) THEN
             TNX=TIT(IODEVICE(ND,2))                             ! Next int. time
           ELSE
-*            IODEVICE(ND,2)=-1                                ! "Finished" index
             IODEVICE(ND,2)=-IODEVICE(ND,2)                    ! "Finished" index
           ENDIF
         ENDDO

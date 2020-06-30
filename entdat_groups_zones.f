@@ -303,8 +303,8 @@ C_______________________         saves the measurement identifier.
 
                      CALL GET_ZONE_GROUP
      ;(IACTGROUP  ,IPARTYPE   ,IACTZONE   ,IERROR   ,IGROUP     ,IOWAR
-     ;,IPLXPAREL  ,1          ,IUGEO      ,LMXNDL   ,MAINF      ,NPAREL   
-     ;,NUMEL      ,NUMNP      ,NTYPAR     ,NZPAR    ,XPOINT     ,YPOINT   
+     ;,IPLXPAREL  ,1          ,IUGEO      ,LMXNDL   ,MAINF      ,NPAREL
+     ;,NUMEL      ,NUMNP      ,NTYPAR     ,NZPAR    ,XPOINT     ,YPOINT
      ;,ZPOINT     ,AREA       ,COORD      ,FILENAME ,IVPAR(1,3) ,INORPAR
      ;,KXX        ,LTYPE      ,LXPAREL)
 
@@ -334,6 +334,17 @@ C_______________________         checked elsewhere (ASS_EXT_DRIFT routine)
      ;,IOPT_GS(IGROUP,4) ,IOPT_GS(IGROUP,3)  ,POSMEAS_GS(1,1,1,IGROUP)
      ;,TRIM_GS(1,IGROUP) ,VMEAS_GS(1,1,1,IGROUP),VSTATS_GS(1,1,IGROUP)
      ;,FILENAME          ,MXNVAR_GS)           
+
+ccc ojo, modificacion 
+
+            DO I=1,IOPT_GS(IGROUP,5)
+               WRITE(772,111) POSMEAS_GS(I,1,1,IGROUP),
+     ;                        POSMEAS_GS(I,2,1,IGROUP),
+     ;                        POSMEAS_GS(I,3,1,IGROUP)
+            END DO
+111         FORMAT(3(5X,F10.3))
+
+ccc fin del ojo
 
 *____________ Checks if the position of the pilot point belongs to domain / group
 
@@ -381,7 +392,6 @@ C_______________________         position is fixed and inverse problem is solved
      ;,IVPAR(1,3)        ,INORPAR   ,KXX                 ,LNNDEL
      ;,LTYPE             ,LXPAREL   ,POSMEAS_GS(1,1,1,IGROUP)
      ;,POSZN_GS(1,1,IGROUP)         ,VMEAS_GS(1,1,1,IGROUP))
-*        ,IZONMEAS_GS(1,IGROUP))
 
              IF (IOINV.GT.0 .AND. IOPT_GS(IGROUP,6).EQ.0) 
      ;          CALL ASS_EXT_DRIFT       ! Pilot points

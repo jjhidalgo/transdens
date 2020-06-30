@@ -5,7 +5,7 @@
 
 ********************************************************************************
 *
-* PURPOSE Reads or assigns covariance matrix od deterministically estimated 
+* PURPOSE Reads or assigns covariance matrix of deterministically estimated 
 *         parameters. If parameters are estimated geostatistically, that part
 *         of the covariance matrix will be calculated by kriging elsewhere 
 *

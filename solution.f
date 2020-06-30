@@ -66,9 +66,9 @@ C_____________________________Computes coefficients matrix and independent term
 
 C----------------------------------------------Solves the system
 
-       M=1
-       IER=0
-       CALL LEQT1P(HESSAUX,M,NPAR,PAR,NPAR,D1,D2,IER)
+      M=1
+      IER=0
+      CALL LEQT1P(HESSAUX,M,NPAR,PAR,NPAR,D1,D2,IER)
 
 C----------------------------------------------Error message
 

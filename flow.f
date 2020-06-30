@@ -638,10 +638,10 @@ C-------------------- Establishing symmetry
                       ISYMETRIC = 0
                   END IF !ITYPAFLUDSC.EQ.7
 
-C-------------------- Establishing wether the flow matrix must be discomposed 
+C-------------------- Establishing wether the flow matrix must be decomposed 
 
 
-C-------------------- the flow matrix must be discomposed if the
+C-------------------- the flow matrix must be decomposed if the
 C-------------------- lhs has been calculated again.
 C-------------------- the flow matrix must be decomposed if we
 C-------------------- solve a lineal steady state pt
@@ -673,7 +673,7 @@ C-------------------- Imposing Dirichlet boundary conditions (prescribed head).
 
 C-------------------- Imposing Cauchy & Neumann boundary conditions.
 
-                      IF (NZONE_PAR(6).NE.0) THEN
+                      IF (NZONE_PAR(6).NE.0 .AND. INDCHANGES.NE.0) THEN
 
                           CALL PRESC_LEAK_BC
      &                   (AFLUDSC    ,ALFA       ,BETAC      ,CAUX1
@@ -707,7 +707,6 @@ C-------------------- Update the maximum residuo value.
 C-------------------- Writes matrix for debugging purposes.
 
                       IF (IFLAGS(26).GT.0) THEN
-
 
                           WRITE(611,*) 'dFdF en INTI = ', INTI
                           CALL WRITE_SQR_MATRIX

@@ -447,6 +447,7 @@ C------------------------- PRODUCTS OF COEF. BEFORE COMPUTING, AND THEY STORAGE
              BIBI(16,L)=-2*WX
              BIBI(17,L)=WY
              BIBI(18,L)=0.D0
+
              IF (IOEQT.NE.1) 
      .       ACTH(L)=(BTRA(I1)+BTRA(I2)+BTRA(I3)+BTRA(I4))/4.D+00
              IF (IOFLLI.NE.0)THEN

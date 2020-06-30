@@ -14,7 +14,6 @@
      ;,KRISYS_GR     ,CROSSCOV_GS ,POSDIS_GR    ,ROTMAT_GR   ,KRIGAUX_GS  
      ;,POSDISAUX_GS  ,IDIMDATASC_GR,EXDRIFT_MEAS1,EXDRIFT_MEAS2
      ;,EXDRIFT_MEAS3 ,EXDRIFT_MEAS4,SEQDATA_SEC ,SEQPOSDAT_SEC)
-*     ;,IZONMEAS_GS   ,ICONDZONES)
 
 C_______________________ Step 0: Declaration of variables
 
@@ -69,11 +68,11 @@ C_______________________           number of actual simulation
 
 *** OJO2 PARA VERIFICACION DE DOS SIMULACIONES CONDICIONADAS IDENTICAS
 *      ISEED(1)=ISEED_SC
-      ISEED(1)=ISEED_SC*IACTSIMUL
+      ISEED(1)=ISEED_SC*IACTSIMUL !orig estaba así en el de Andrés.
 *** FIN DEL OJO2
 
-      DO IDUMMY=1,1000
-        R_DUMMY=ACORNI(ISEED)  ! ACORNI will make ISEED to change 1000 times
+      DO IDUMMY=1,5
+        R_DUMMY=ACORNI(ISEED)  ! ACORNI will make ISEED to change 5 times
       END DO
 
 C_______________________ Step 2.2: Calculates random numbers
@@ -143,7 +142,6 @@ C_______________________           at KRIGING routine
            CALL EQUAL_ARRAY (SEQPOSDAT(1,1),SEQPOSDAT_SEC(1,1),NUMDATA)
            CALL EQUAL_ARRAY (SEQPOSDAT(1,2),SEQPOSDAT_SEC(1,2),NUMDATA)
            CALL EQUAL_ARRAY (SEQPOSDAT(1,3),SEQPOSDAT_SEC(1,3),NUMDATA)
-
            CALL EQUAL_ARRAY (SEQDATA(1,1),SEQDATA_SEC(1,1),NUMDATA)
            CALL EQUAL_ARRAY (SEQDATA(1,2),SEQDATA_SEC(1,2),NUMDATA)
            CALL EQUAL_ARRAY (SEQDATA(1,3),SEQDATA_SEC(1,3),NUMDATA)
@@ -193,7 +191,7 @@ C_______________________ Step 4.3: Draw a N(0,1) random nuber (factor of ST DEV)
 
 C_______________________ Step 4.4: Changes ISEED for next point
 
-          DO IDUMMY=1,1000
+          DO IDUMMY=1,5
             R_DUMMY=ACORNI(ISEED)
           END DO
 
@@ -235,7 +233,6 @@ C_______________________           further simulated points
         END IF ! IFLAG_SIMUL(IDPOINT).EQ.-1
 
       END DO ! IPOINT=1,NPOINTS
-
 
  2100 FORMAT(I5,4(3X,E10.4))
       RETURN

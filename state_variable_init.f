@@ -9,7 +9,7 @@
 
 ********************************************************************************
 *
-* PURPOSE To initialize thestate variable (pressure head, piezometric head or
+* PURPOSE To initialize the state variable (pressure head, piezometric head or
 *         solute concentration at the beginning of the Newton-Raphson process 
 *         when solving the nonlinear flow or transport equation.  
 *

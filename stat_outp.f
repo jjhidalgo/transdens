@@ -1,14 +1,14 @@
        SUBROUTINE STAT_OUTPUT
-     ;(IDIMCOV    ,IDIMHESS   ,IDIMWORK  ,IODIM     ,IOVAR     ,IOPRHED  
-     ;,ISOT       ,MAINF      ,NBANDCOV  ,NDEVS     ,NFLAGS    ,NPAR      
-     ;,NSTAT      ,NTYPAR     ,NUMTOBS   ,NZPAR     ,COVINV    ,COVPAR    
-     ;,DEVICESTAT ,DEVNAME    ,EIGENVAL  ,EIGENVEC  ,FOBJ_WGT  ,HESSINV   
-     ;,IFLAGS     ,INORPAR    ,IODEVICE  ,IOLG_PAR  ,ITYPEPAR  ,IVPAR     
-     ;,NZONE_PAR  ,OBSCLASS   ,PARC      ,PARM      ,PAR_WGT   
-     ;,RESID      ,STPAR      ,TOBS      ,RESIDPAR  ,VJAC      ,VOBS          
+     ;(IDIMCOV    ,IDIMHESS   ,IDIMWORK  ,IODIM     ,IOVAR     ,IOPRHED
+     ;,ISOT       ,MAINF      ,NBANDCOV  ,NDEVS     ,NFLAGS    ,NPAR
+     ;,NSTAT      ,NTYPAR     ,NUMTOBS   ,NZPAR     ,COVINV    ,COVPAR
+     ;,DEVICESTAT ,DEVNAME    ,EIGENVAL  ,EIGENVEC  ,FOBJ_WGT  ,HESSINV
+     ;,IFLAGS     ,INORPAR    ,IODEVICE  ,IOLG_PAR  ,ITYPEPAR  ,IVPAR
+     ;,NZONE_PAR  ,OBSCLASS   ,PARC      ,PARM      ,PAR_WGT
+     ;,RESID      ,STPAR      ,TOBS      ,RESIDPAR  ,VJAC      ,VOBS
      ;,VOBSC      ,WORK       ,IOINV     ,MEASTYP
      ;!NUEVOS
-     ;,WGT_UNK    ,IPNT_PAR  ,IDIMWGT   ,IOPT_GS,MXGRPZN
+     ;,WGT_UNK    ,IPNT_PAR  ,IDIMWGT   ,IOPT_GS    ,MXGRPZN
      ;,NPARDET)
 
 ********************************************************************************
@@ -287,11 +287,10 @@ C______________________________________________ Step 0: Declaration of variables
        CHARACTER*10 TYPENAME(40)
        INTEGER*4 INORPAR2(NTYPAR+1)
 
-       
-     
-
 C_________________________Step 1: Initialises local arrays and get users desires
-
+      
+      STAT = 0.0D0
+      INORPAR2 = 0D0
       IORESLIST = 0
       IOEIGENVEC = 0
       IOCORMAT = 0
@@ -353,8 +352,7 @@ C______________________ Step 2: Fills array OBSCLASS. Groups dev. by data type.
 
       MAXNOFOBS = 0
 
-      CALL ZERO_ARRAY_I(OBSCLASS,NSTAT*(NDEVS+1))
-      CALL ZERO_ARRAY  (STAT,40*11)
+      OBSCLASS = 0D0
 
       DO ND= 1 , NDEVS                                       ! Loop over devices
               
@@ -389,7 +387,7 @@ C______________________ Step 2: Fills array OBSCLASS. Groups dev. by data type.
          DO J=INORPAR2(I)+1,INORPAR2(I+1)
              IF (IVPAR(J,1) .NE.0)THEN
 	          DO K=IVPAR(J,1),IVPAR(J,2)
-	             IF (IPNT_PAR(K).EQ.J) THEN
+	             IF (IPNT_PAR(K).GT.0) THEN
                        STAT(I+NSTAT,2)=PAR_WGT(1)
                        NOFPAR= NOFPAR +1
 	             ENDIF
@@ -400,22 +398,22 @@ C______________________ Step 2: Fills array OBSCLASS. Groups dev. by data type.
       ENDDO
 
                                           ! Fill STAT with lambdas of parameters
-      DO I=NSTAT+7,NTYPAR+NSTAT       ! -5 Anisot. components are not in PAR_WGT 
+      DO I=7,NTYPAR
          NOFPAR = 0
-         NOF = INORPAR(I-NSTAT)+1
-         NOL = INORPAR(I-NSTAT)+NZONE_PAR(I-NSTAT-5)
-         
+         NOF = INORPAR(I)+1
+         NOL = INORPAR(I)+NZONE_PAR(I-5) !-5 because of anisotropy is in INORPAR & STAT but not in PAR_WGT
+
          DO J=NOF,NOL
              IF (IVPAR(J,1) .NE. 0)THEN
 	          DO K= IVPAR(J,1),IVPAR(J,2)
-	             IF (IPNT_PAR(K).EQ.J) THEN
-                          STAT(I+NSTAT,2)=PAR_WGT(I-NSTAT-5)
+	             IF (IPNT_PAR(K).GT.0) THEN
+                          STAT(I+NSTAT,2)=PAR_WGT(I-5)
                           NOFPAR= NOFPAR +1
 	             ENDIF
 	          ENDDO
              ENDIF
          ENDDO
-         STAT(I,11)=NOFPAR 
+         STAT(I+NSTAT,11)=NOFPAR 
       ENDDO
 
                         ! Fill array with names of state variable and parameters
@@ -459,7 +457,7 @@ C______________________ Step 2: Fills array OBSCLASS. Groups dev. by data type.
          ENDDO
 	ENDIF
 C_______________________ Step 3: Calculate total and partial objective functions
-                
+
       CALL SO_OBJ 
      ;(IDIMCOV  ,NBANDCOV   ,NDEVS      ,NPAR     ,NSTAT      ,NTYPAR
      ;,NUMTOBS  ,OBJF       ,COVINV     ,COVPAR   ,DEVICESTAT ,IODEVICE
@@ -499,7 +497,7 @@ C________________________Step 5: Calculation and inversion of  the hessin matrix
       IF (IODETHESSOK.EQ.0 .AND. IOINV.GT.0) THEN  
 
 C______________________________________________________ Step 6: Calculate alphas
-                
+
         CALL ALPHA
      ;(IDIMCOV  ,IDIMHESS ,NBANDCOV ,NDEVS    ,NPAR     ,NSTAT
      ;,NTYPAR   ,NUMTOBS  ,OBJF     ,COVINV   ,COVPAR
@@ -514,7 +512,7 @@ C______________________________________________________ Step 6: Calculate alphas
         ENDDO
 
 C______________________________ Step 7: Calculates xpected likelihood criterions
-                
+
         CALL LIKELIHOOD
      ;(DETHESS  ,EXPS1    ,EXPS2    ,EXPS3    ,IDIMCOV  ,IDIMHESS
      ;,LIKS1    ,LIKS2    ,LIKS3    ,NDEVS    ,NPAR     
@@ -526,7 +524,7 @@ C______________________________ Step 7: Calculates xpected likelihood criterions
       ENDIF   ! Hessian matrix is positive definite
       
 C_________________________________________ Step 8 Calculates residual statistics
-                
+
       CALL RESIDUALS
      ;(IDIMCOV  ,IOINV      ,NBANDCOV   ,NDEVS        
      ;,NSTAT    ,NTYPAR     ,NUMTOBS    ,NPAR      ,TOTALMAX

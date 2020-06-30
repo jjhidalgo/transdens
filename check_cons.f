@@ -55,13 +55,11 @@
 
 C____________________________________________ Check consistency lambda and ivpar
 
-
-
       DO I =1, NTYPAR
 
          NOF = INORPAR2(I)+1
          NOL = INORPAR2(I+1)
-        
+
          ESTIMPAR = .FALSE.
 
          DO J = NOF,NOL

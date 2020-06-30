@@ -50,7 +50,7 @@
 * HYSTORY
 *
 *      G.Galarza  10-1997     First coding
-*      JHG        11-2003     Adapted to use any lenght of vector VACAL.
+*      JHG        11-2003     Adapted to use any lenght of vector VCAL.
 *                             Modificated to be used with solutions 
 *                             obtained with Newton - Raphson or Picard
 *                             linearization methods.
@@ -86,7 +86,7 @@ C----------------------------- In order to localize the relevant elements of the
 C----------------------------- vector, we check if we are solving a flow or transport system
 C----------------------------- or a coupled system. In the last case, the heads and 
 C----------------------------- concentrations are mixed, and therefore  separated by one
-C-----------------------------  position; in the first case, they are not. 
+C----------------------------- position; in the first case, they are not. 
 
       IF (IOCOUPLED.EQ.1) THEN
 

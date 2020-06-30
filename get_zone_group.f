@@ -133,6 +133,7 @@ C________________________ Step 3: ERROR:Point does not belong to the domain.
       IF (NEL.LE.0 .OR. NEL.GT.NUMEL) THEN
 
         IF (ITYPE.EQ.1) THEN   
+
           CALL ERROR           ! Location is a sampling point
      ; (IERROR,IOWAR,MAINF,FILENAME
      ; ,'MEASUREMENT LOCATION DOES NOT BELONG TO THE DOMAIN'

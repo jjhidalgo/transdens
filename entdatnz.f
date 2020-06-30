@@ -6,7 +6,7 @@
      ; ,FILENAME  ,INDPAR   ,INORPAR  ,IOLG_PAR ,IOPT_GS   ,IPNT_PAR  
      ; ,ISOZ      ,IVPAR    ,LDIM     ,NFNLPAR  ,NFTPAR    ,NZONE_PAR 
      ; ,PAR_WGT   ,PARC     ,PARM     ,PARZ     ,STPAR     ,WGT_PAR   
-     ; ,NGROUP_ZN ,IPARDET  ,IOINV_GS ,WGT_UNK)    
+     ; ,NGROUP_ZN ,IPARDET  ,IOINV_GS ,WGT_UNK  ,PARNAME)    
 
 *****************************************************************************
 *
@@ -139,9 +139,9 @@
 
        INTEGER*4 NPFNL,IOLGTRA,IPOS,IZTRAC,IOLGVAR,IOPBLI
      ,          ,IOTIM,ISTART,NZVAR,NPTNL,NROW,NZONTOT
-     ;          ,NPARFDIM,NPARFPAR,NPPFLOW,IGROUP,NPPTOTAL
+     ;          ,NPARFDIM,NPARFPAR,NPPFLOW,IGROUP,NPPTOTAL,INAME
        REAL*4 ERNUM
-       CHARACTER FILENAME(20)*20,VARNAME*20
+       CHARACTER FILENAME(20)*20,VARNAME*20,PARNAME(NPAR)*4
 
 C------------------------- FIRST EXECUTABLE STATEMENT.
 C------------------------- Initializes number of order of FLOW estimated param.
@@ -151,6 +151,7 @@ C------------------------- transport parameters
        NPARFDIM=NPARF-NPARFPRG
        NPPTOTAL=0   ! Total number of pilot points
        NPPFLOW=0    ! Flow pilot points
+       INAME = 0
 
        IF (IOINV_GS.NE.0) THEN
          NPPTOTAL=0
@@ -197,7 +198,8 @@ C------------------------- Reads transmissivity zones
      ;,PAR_WGT(1) ,FILENAME   ,INDPAR     ,INORPAR    ,IVPAR(1,4)
      ;,IOPT_GS    ,IVPAR(1,2) ,IPNT_PAR   ,IVPAR(1,1) ,ISOZ       
      ;,IVPAR(1,3) ,LDIM       ,NFNLPAR    ,NFTPAR     ,STPAR      
-     ;,PARC       ,PARM       ,PARZ       ,WGT_PAR    ,WGT_UNK,NROW)
+     ;,PARC       ,PARM       ,PARZ       ,WGT_PAR    ,WGT_UNK,NROW
+     &,PARNAME    ,INAME)
 
 C------------------------- Reads storage coeficient zones
           
@@ -219,7 +221,8 @@ C------------------------- Reads storage coeficient zones
      ;,PAR_WGT(2)    ,FILENAME     ,INDPAR       ,IVPAR(IPOS,4) ,IOPT_GS  
      ;,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)           ,IVPAR(IPOS,1) 
      ;,IVPAR(IPOS,3) ,NFNLPAR(IPOS),NFTPAR(IPOS) ,STPAR(IPOS)   ,PARC          
-     ;,PARM          ,PARZ(IPOS)   ,WGT_UNK      ,WGT_PAR(ISTART) ,NROW)
+     ;,PARM          ,PARZ(IPOS)   ,WGT_UNK      ,WGT_PAR(ISTART) ,NROW
+     &,PARNAME       ,'ST'         ,INAME)
 
           END IF ! NZONE_PAR(2).NE.0
 
@@ -244,7 +247,8 @@ C------------------------- Reads recharge coeficient zones
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)        
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS) ,NFTPAR(IPOS)  
      ;,STPAR(IPOS)   ,PARC          ,PARM          ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW        ,PARNAME  ,'RE'
+     ;,INAME)
 
           END IF ! NZONE_PAR(3).NE.0
 
@@ -269,8 +273,9 @@ C------------------------- Reads prescribed head
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)            
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS) ,NFTPAR(IPOS)  
      ;,STPAR(IPOS)   ,PARC          ,PARM          ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
-
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW        ,PARNAME  ,'HP'
+     ;,INAME)
+            
           END IF ! NZONE_PAR(4).NE.0
 
 C------------------------- Reads prescribed flow
@@ -294,8 +299,9 @@ C------------------------- Reads prescribed flow
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)      
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS) ,NFTPAR(IPOS)  
      ;,STPAR(IPOS)   ,PARC          ,PARM          ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
-
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW        ,PARNAME  ,'QP'
+     ;,INAME)
+            
           END IF ! NZONE_PAR(5).NE.0
 
 C------------------------- Reads leakage
@@ -319,8 +325,9 @@ C------------------------- Reads leakage
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)      
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS) ,NFTPAR(IPOS)  
      ;,STPAR(IPOS)   ,PARC          ,PARM          ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
-
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW        ,PARNAME  ,'LK'
+     ;,INAME)
+            
           END IF ! NZONE_PAR(6).NE.0
 
           IF (IOINV.GT.0) NPARFPAR=IPARDET ! Number of determ. estimated param.
@@ -393,7 +400,8 @@ C------------------------- Reads longitudinal dispersivity
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)            
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS) ,NFTPAR(IPOS)  
      ;,STPAR(IPOS)   ,PARC          ,PARM          ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW        ,PARNAME  ,'DL'
+     ;,INAME)
 
           END IF ! NZONE_PAR(7).NE.0
 
@@ -418,7 +426,8 @@ C------------------------- Reads transversal dispersivity
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)            
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS) ,NFTPAR(IPOS)  
      ;,STPAR(IPOS)   ,PARC          ,PARM          ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW        ,PARNAME   ,'DT'
+     ;,INAME)
 
           END IF ! NZONE_PAR(7).NE.0
 
@@ -443,7 +452,8 @@ C------------------------- Reads molecular difusion
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)            
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS) ,NFTPAR(IPOS) 
      ;,STPAR(IPOS)   ,PARC          ,PARM          ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW        ,PARNAME  ,'DF'
+     ;,INAME)
 
           END IF ! NZONE_PAR(9).NE.0
 
@@ -472,7 +482,8 @@ C------------------------- Reads porosity
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)            
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS) ,NFTPAR(IPOS)  
      ;,STPAR(IPOS)   ,PARC          ,PARM          ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW        ,ParName  ,'PO'
+     ;,INAME)
 
           ELSE
 
@@ -508,8 +519,9 @@ C------------------------- Reads first order decay coeficient
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)            
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS) ,NFTPAR(IPOS)  
      ;,STPAR(IPOS)   ,PARC          ,PARM          ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
- 
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW        ,PARNAME ,'FO'
+     ;,INAME)
+
           END IF ! NZONE_PAR(11) 
 
 C------------------------- Reads retardation coeficient
@@ -533,7 +545,8 @@ C------------------------- Reads retardation coeficient
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)             
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS)        ,NFTPAR(IPOS)
      ;,STPAR(IPOS)   ,PARC          ,PARM        ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW      ,PARNAME ,'RE'
+     ;,INAME)
 
           END IF ! NZONE_PAR(12)
 
@@ -558,8 +571,9 @@ C------------------------- Reads external concentration
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)            
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS) ,NFTPAR(IPOS)  
      ;,STPAR(IPOS)   ,PARC          ,PARM          ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
-
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW        ,PARNAME ,'CE'
+     ;,INAME)
+            
           END IF ! NZONE_PAR(13).NE.0
 
 C------------------------- Reads concentration leakage coeficient
@@ -583,7 +597,8 @@ C------------------------- Reads concentration leakage coeficient
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)             
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS)        ,NFTPAR(IPOS)
      ;,STPAR(IPOS)   ,PARC          ,PARM        ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW      ,PARNAME ,'CL'
+     ;,INAME)
 
           END IF ! NZONE_PAR(18).NE.0
 
@@ -612,7 +627,8 @@ C------------------------- Reads group parameters for non linear problems
      ;,IOPT_GS       ,IVPAR(IPOS,2) ,IPNT_PAR(ISTART)            
      ;,IVPAR(IPOS,1) ,IVPAR(IPOS,3) ,NFNLPAR(IPOS) ,NFTPAR(IPOS)  
      ;,STPAR(IPOS)   ,PARC          ,PARM          ,PARZ(IPOS)    
-     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW)
+     ;,WGT_UNK       ,WGT_PAR(ISTART) ,NROW        ,PARNAME ,'GP'
+     ;,INAME)
 
           END IF ! NZONE_PAR(14).NE.0
 

@@ -176,7 +176,7 @@ C__________________________________________ Step 1: WARNINGS AND  & general stat
 
 
 
-      IF (ALPHANEG .EQV. .TRUE.) 
+      IF (ALPHANEG .EQV. .TRUE.)
      ;   WRITE (MAINF,3000) 
  3000 FORMAT(//,' WARNING: SOME OF THE ALPHA-PARAMETERS ARE NEGATIVE.'/
      ;         ,'          THE EXPECTD LOG LIKELIHOOD FUNCTION BASED',/
@@ -244,9 +244,9 @@ C_______________________________________________ Step 3: statistics by data type
       ENDDO
  
       DO I=1,NTYPAR * MIN(IOINV,1)                         ! loop over parameter types
-       IF (STAT(I+NSTAT,2) .GT. 0) THEN                    ! Type of  parameters estimated ?
+       IF (STAT(I+NSTAT,2) .GT. 0) THEN                    ! Type of  parameters estimated?
            WOBJF = STAT(I+NSTAT,2)*STAT(I+NSTAT,1)         !lambda*obj f
-           COBJF = (STAT(I+NSTAT,2)*STAT(I+NSTAT,1))/OBJF       !contribution to obj f
+           COBJF = (STAT(I+NSTAT,2)*STAT(I+NSTAT,1))/OBJF  !contribution to obj f
            WRITE(MAINF,7000) TYPENAME(I+NSTAT),STAT(I+NSTAT,1)
      ;    ,WOBJF,100*COBJF  ,STAT(I+NSTAT,3),STAT(I+NSTAT,4)
      ;    ,IOLG_PAR(I)             
@@ -509,8 +509,6 @@ C___________________________________ Step 3: Echoes confidence intervals to file
 
       SUBROUTINE OUTPUT2
      ;(NPAR,IDIMMATRIX,MAINF,NSTAT,ITYPEPAR,MATRIX,TYPENAME)
-
-
 
 ********************************************************************************
 *

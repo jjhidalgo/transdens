@@ -78,7 +78,7 @@
      ; ,ESTKRIG_GS,POSDISAUX_GS,POSDIS_GS,EXDRZN_GS,MXZONPP_GS
      ; ,DATASC_GS,IDIMWGT,IPNT_PAR,WGT_PAR,NPARDET,ICHECK_GS,LDIM_GS
      ; ,COORDGR_GS,PARC,WGT_UNK,IPOS,DERIV,PARGOOD,IACTSIMU
-     ; ,PARC_GS,IFLAG_SIMUL,COVPAR_GR)
+     ; ,PARC_GS,IFLAG_SIMUL,COVPAR_GR, PARNAME)
 
 *****************************************************************************
 *
@@ -559,8 +559,8 @@ C     EXTERNAL VARIABLES: ARRAYS
      ;   ,POSZN_GS(MXNZON_GS,3,NGROUP_ZN),PARGOOD(NZPAR)
      ;   ,PARC_GS(MXNPP_GS,NGROUP_ZN)
 
-     
-     
+       CHARACTER::PARNAME(NPAR)*4 
+
        IF(IFLAGS(3).EQ.1) CALL IO_SUB('INVER',0)
 
 C------------------------- Rewinds inverse problem related files
@@ -580,7 +580,7 @@ C------------------------- of mass balance
 
 C__________OJO!!!!!!!!!! ESTO VA EN LA ENTRADA DE DATOS
 
-       IOMIN=1        ! UNICO ALGORITMO DE MOMENTO!!!!!!
+       IOMIN=1        ! MARQUARDT UNICO ALGORITMO DE MOMENTO!!!!!!
 
 C_______________________Inicialization for control of convergence
 
@@ -593,6 +593,7 @@ C_______________________Inicialization for control of convergence
        GNORM=0.D0
        GNORM1=0.D0
        XMAXIM=0.D0
+       PHI = 0.D0
 
 c-parche
       IOCTRA = 0 !se pasa a der_param, pero alli sólo funciona la opción 0
@@ -663,6 +664,15 @@ C___________________________ Saves first set of parameters
           IF (NUMITER.EQ.1 .AND. IOINV.GT.0) 
      ;        CALL EQUAL_ARRAY(PARGOOD,PARZ,NZPAR)
 
+ccc modificacion; escribimos aqui el PARZ y PARC
+
+          IF (NUMITER == 1 .AND. IOINV.GT.0 .AND. IOINV_GS.GT.0) THEN
+             WRITE(771,*) 'Prior information at Pilot point'
+             WRITE(771,*) PARC
+          END IF
+
+ccc fin de la modificacion
+
 C_________________________ Initializes array ALFA, containing leakage coeff. 
 
             CALL ZERO_ARRAY(ALFA,NUMNP)
@@ -672,7 +682,7 @@ C_________________________ any other dependent one at all obs. devices and
 C_________________________ at all simulation times are stored
 
           IF (NUMITER.GT.1.AND. (IOWRITE(5).EQ.2.OR.IOWRITE(6).EQ.2))
-     ;         REWIND(81)
+     ;        REWIND(81)
 
           IF (IOINV.GT.0) THEN
              CALL MODIF_MAXITER (IPAR_INV (4))
@@ -824,7 +834,7 @@ c-fin-parche
      &,VJAC      ,VOBSC     ,WATVOL      ,WORK     ,WTOBSN  ,WTOBST
      &,XNORVD    ,DVDP      ,IOLG_PAR    ,IOCTRA   ,HINI,WSPECHEAT
      &,WTHERMCON
-     ;,IDIMWGT   ,WGT_PAR  ,IPNT_PAR,IPOS     ,DERIV)
+     ;,IDIMWGT   ,WGT_PAR  ,IPNT_PAR     ,IPOS     ,DERIV,PARNAME)
 
            IF (IFLAGS(4).EQ.1 .AND. NUMITER.EQ.1) CLOSE(69)
 
@@ -837,7 +847,7 @@ c-fin-parche
 
            ENDIF
 
-C_______________________Selects the minimization algoristm.
+C_______________________Selects the minimization algorithm.
 C_______________________Only Marquardt's method operative
 
            IF (IPAR_INV(4).EQ.1 .AND. IFLAGS(4).EQ.1) RETURN
@@ -864,7 +874,8 @@ C______________________________ objective function
      ;,OBJPAR   ,XMAXIM   ,COVINV   ,COVPAR    ,DLT_PAR   ,FOBJ_WGT  
      ;,GRAD     ,HESS     ,HESSAUX  ,IFLAGS    ,IOWRITE   ,IPAR_INV
      ;,PAR_INV  ,PARAUX   ,PARC      ,PARGOOD   ,PARM     ,PARZ
-     ;,VJAC     ,VOBS     ,VOBSC     ,WORK      ,WGT_UNK  ,MEASTYP)
+     ;,VJAC     ,VOBS     ,VOBSC     ,WORK      ,WGT_UNK  ,MEASTYP
+     ;, PHI)
 
 C______________________No convergence
 

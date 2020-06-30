@@ -89,7 +89,7 @@ C------------------------- Initializes to zero some auxiliar variables
        IAUXCON=  0
        IAUXCONT= 0
        IAUXDMT=  0
-	 IAUXCLK=  0
+       IAUXCLK=  0
      
        NN=IN-IOLD
 *_______________________Interpolation loop
@@ -163,7 +163,7 @@ C------------------------- Initializes to zero some auxiliar variables
 
              IAUXIBT=IBTCO(I)
              IF (NZCOE.NE.0)IAUXCON=IXPARNP(I,INCON)
-	       IF (NZCLK.NE.0)IAUXCLK=IXPARNP(I,INCLK)
+             IF (NZCLK.NE.0)IAUXCLK=IXPARNP(I,INCLK)
 
 *_______________________Define external concentration and matrix diffusion
 *_______________________zone number to be written in MAIN file

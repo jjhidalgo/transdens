@@ -21,7 +21,6 @@ C HYSTORY: Programmed at november 1997 by G.Galarza
        DIMENSION NFTPAR(NZPAR)     
 
        INDCHANGES=0                     !no changes, no new RHS computation
-       
        IF(IOREGIMEN.EQ.1 .OR. IODENS.EQ.1 .OR. IOFLLI.NE.0) INDCHANGES=1
        IF ((TINC.NE.TOLD).OR.(IENTRY.EQ.1.AND.INTI.EQ.1)) THEN !the time step increment changed
          INDCHANGES=1
@@ -30,7 +29,7 @@ C HYSTORY: Programmed at november 1997 by G.Galarza
          DO NZ=1,NZALF
            NZP=INALFC+NZ
            NFT=NFTPAR(NZP)
-           IF (NFT.NE.0) THEN         !any leakage coefficient changed
+           IF (NFT.NE.0) THEN   !any leakage coefficient changed
              INDCHANGES=1
              RETURN
            ENDIF

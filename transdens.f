@@ -109,7 +109,6 @@
 *                         LECDIM is called.
 *  ISOT                   Maximum hydraulic conductivity tensor anisotropy
 *                         degree in the problem.
-*  ITT                    Variable needed for routine INIT_CPUTIME.
 *                         It is not used
 *  KOLD                   Counts the location of the different integer arrays
 *                         in the space defined by array KV
@@ -153,18 +152,18 @@
 *  NZQQP                  Number of prescribed flow zones
 *  NZSTG                  Number of storage Coefficient zones
 *  NZTRA                  Number of transmissivity zones
+*  TEND                   Final CPU time.
+*  TINI                   Initial CPU time
 *  TIMECPU                Cpu time in hour, minutes and seconds
 *  ZERO                   Real number 0.0 in double precision
 *
 * FUNCTIONS AND SUBROUTINES REFERENCED
 *
-*  CPUTIME                Computes the cpu time consumed
-*  INIT_CPUTIME           Initializes the counter of cpu time. It is useless
-*                         in most machines except VMS
 *  INIT_INTEG             Defines some integer variables
 *  LECDIM                 Reads dimensions, options and scalar parameters of
 *                         the current problem
 *  PRINCIPAL              It is actually the routine that runs the code
+*  WRI_CPUTIME            Writes the cpu time consumed
 *  WRI_PART               Writes the partitions of arrays RV and IV
 *
 * HISTORY
@@ -205,7 +204,7 @@ C------------------------- FIRST EXECUTABLE STATEMENT.
 
 C--------------- Initializes cputime counter to zero
 
-       CALL INIT_CPUTIME (ITT)
+       call cpu_time(TINI)
 
 C--------------- Initializes some variables
 
@@ -625,11 +624,7 @@ C--------------- Discretization arrays
              NOLD=NOLD+NUMEL*IDIMDTRA*NPBTPDIM
           ENDIF
 
-          !IDHTRA= NOLD                               !HTRA
-          !IF (IODENS_INI.EQ.1) THEN
-          !
-          !    NOLD = IDHTRA + IDIMHTRA*NUMEL
-          !END IF
+
           IDCAUX1=NOLD                               !CAUX1
           IDCAUX2=IDCAUX1+NUMNP*NPBTPDIM             !CAUX2
           NOLD=IDCAUX2+NUMNP*NPBTPDIM
@@ -924,8 +919,9 @@ C--------------- Geoestatistical inverse problem variables
 
          IDESTKRIG_GS=NOLD                                          !ESTKRIG_GS
          IDZNWGT_GS=IDESTKRIG_GS+MXZONPP_GS                         !ZNWGT_GS
-         IDCROSSCOV_GS=IDZNWGT_GS+MXNPRIM_GS*MXNZON_GS              !CROSSCOV_GS
-         IDESTPARZ_GS=IDCROSSCOV_GS+IDIMCROSS_GS*MXZONPP_GS*2         !ESTPARZ_GS
+         !IDCROSSCOV_GS=IDZNWGT_GS+MXNPRIM_GS*MXNZON_GS              !CROSSCOV_GS
+         !IDESTPARZ_GS=IDCROSSCOV_GS+IDIMCROSS_GS*MXZONPP_GS*2       !ESTPARZ_GS qq
+         IDESTPARZ_GS = IDZNWGT_GS+MXNPRIM_GS*MXNZON_GS              !PARZ_GS
          NOLD=IDESTPARZ_GS+MXNZON_GS*MXSC_GS*NGROUP_ZN
 
                                            ! Conditional simulations
@@ -1312,23 +1308,6 @@ C--------------- Statistical analysis arrays
        LASTII=IOLD
        LASTIR=NOLD
 
-C--------------- Checks partition size
-
-       IF (NOLD.GT.IRMAX .OR. IOLD.GT.IIMAX .OR. KOLD.GT.IKMAX) THEN
-          WRITE(6,1000) IRMAX,NOLD,IIMAX,IOLD,IKMAX,KOLD
-          WRITE(MAINF,1000) IRMAX,NOLD,IIMAX,IOLD,IKMAX,KOLD
-
- 1000     FORMAT(25X,' PARTITION ERROR  ',/,25X,'-------------------',
-     ;     /,10X,'IRMAX IS',I9,' IT MUST BE GREATHER OR EQUAL THAN',I9,
-     ;     /,10X,'IIMAX IS',I9,' IT MUST BE GREATHER OR EQUAL THAN',I9,
-     ;     /,10X,'IKMAX IS',I9,' IT MUST BE GREATHER OR EQUAL THAN',I9,
-     ;     /,' EDIT THE MAIN PROGRAM AND CHANGE THE STATEMENT ',
-     ;     /,10X,'PARAMETER (IRMAX=...,IIMAX=...,IKMAX=...)',
-     ;     /,10X,'THEN COMPILE AND LINK THE PROGRAM')
-
-          STOP ' NOT ENOUGH SPACE'
-       ENDIF
-
 C--------------- Writes variables location in arrays RV, IV and KV
 
        IF (IOPART.NE.0) CALL WRI_PART
@@ -1419,6 +1398,34 @@ C--------------- Writes variables location in arrays RV, IV and KV
      ;
      ;!------------------------------------------------------------------others
      ;,LASTII      ,LASTIR       ,MAINF)
+      
+C----- Salidas programadas por Andrés. Por ahora las mantengo. 
+       IF (IOINV_GS.GT.0) THEN
+           OPEN(UNIT = 771, FILE = 'transin_output_optimum.out', 
+     ;          STATUS = 'UNKNOWN')
+           OPEN(UNIT = 772, FILE = 'pilot_point_locs_transin.out', 
+     ;          STATUS = 'UNKNOWN')
+       END IF
+
+
+C--------------- Checks partition size
+
+       IF (NOLD.GT.IRMAX .OR. IOLD.GT.IIMAX .OR. KOLD.GT.IKMAX) THEN
+          WRITE(6,1000) IRMAX,NOLD,IIMAX,IOLD,IKMAX,KOLD
+          WRITE(MAINF,1000) IRMAX,NOLD,IIMAX,IOLD,IKMAX,KOLD
+
+ 1000     FORMAT(25X,' PARTITION ERROR  ',/,25X,'-------------------',
+     ;     /,10X,'IRMAX IS',I9,' IT MUST BE GREATHER OR EQUAL THAN',I9,
+     ;     /,10X,'IIMAX IS',I9,' IT MUST BE GREATHER OR EQUAL THAN',I9,
+     ;     /,10X,'IKMAX IS',I9,' IT MUST BE GREATHER OR EQUAL THAN',I9,
+     ;     /,' EDIT THE MAIN PROGRAM AND CHANGE THE STATEMENT ',
+     ;     /,10X,'PARAMETER (IRMAX=...,IIMAX=...,IKMAX=...)',
+     ;     /,10X,'THEN COMPILE AND LINK THE PROGRAM')
+
+          STOP ' NOT ENOUGH SPACE'
+       ENDIF
+
+
 
 C--------------- Initializes to zero all variables
 
@@ -1601,10 +1608,12 @@ C--------------- Calls main subprogram
 
 C-------------------------------------------------- Computes the total cputime
 
-       CALL CPUTIME (MAINF)
+       call cpu_time(TEND)
+       CALL WRI_CPUTIME (MAINF,TINI, TEND)
 
 C-------------------------------------------------- Writes code version
 
+       WRITE(*,10)
        WRITE (MAINF,10)
 
        END

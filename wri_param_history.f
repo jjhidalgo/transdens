@@ -78,14 +78,8 @@ C_______________________ Step 0: Declaration of variables
      ;              ,'LINEAR DECAY    ','RETARDATION     '
      ;              ,'EXTERNAL CONC.  ','GENERIC PARAM.  '/
 
-       IF (IOWIT.EQ.0) THEN
-          WRITE(MAINF,2000) 
- 2000     FORMAT(/,' LAST ESTIMATED PARAMETERS')
-       END IF
 
-       WRITE(MAINF,2100)
- 2100  FORMAT(//,16X,'PARAM.   ZONE    ISOZ       VALUE',/,16X,
-     ;            'NUMBER   NUM.')
+C_______________________ Step 1: Writes history of parameters.
 
       REWIND (70)
       DO ITER=1,11111
@@ -95,13 +89,24 @@ C_______________________           set (IOWIT<>0) or writes last PARGOOD
 C_______________________           (IOWIT=0)
 
         IF (IOWIT.NE.0) THEN
-           READ (70,END=999) ISUMFO,NUMITER,PARGOOD
-           WRITE (MAINF,2200) NUMITER
- 2200      FORMAT(//,1X,'ITERATION',I4)
+          READ (70,END=999) ISUMFO,NUMITER,PARGOOD
+          IF (ISUMFO.EQ.0) THEN
+              WRITE (MAINF,2000) NUMITER
+          ELSE
+              WRITE (MAINF,2001) NUMITER
+          END IF
         ELSE
-           IF (ITER.GT.1) RETURN     ! Only once, with last estimated param.
+            IF (ITER.GT.1) RETURN     ! Only once, with last estimated param.
+            WRITE (MAINF,1000)
         END IF
 
+ 1000   FORMAT (/,5X,' LAST ESTIMATED PARAMETERS',/
+     ;           ,5X,' ==== ========= ==========',/)
+ 2000   FORMAT(//,' GOOD ITERATION:',I5,/,' ==== ==========',//,12X,
+     ;             'TYPE    ZONE  ISOZ         VALUE',/)
+ 2001   FORMAT(//,' BAD ITERATION:',I5,/,' === ==========',//,12X,
+     ;             'TYPE    ZONE  ISOZ         VALUE',/)
+        
 C_______________________ Step 1.2: Writes values. Transmissivity, due to 
 C_______________________           anisotropy requires an special treatment
 

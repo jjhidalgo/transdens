@@ -370,8 +370,8 @@ C______________________________
         IUGR7=32
         IUGR8=33
         IUGR9=34
-	  IUBLH=35
-	  IUBLC=36
+	IUBLH=35
+	IUBLC=36
         IAOBS=81
         IAUXH=94
         IAUXC=93      

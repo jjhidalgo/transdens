@@ -121,7 +121,7 @@ C______________________________ Identifies some useful variables
            BF(1)=(X2*Y3-X3*Y2+(Y2-Y3)*XOB+(X3-X2)*YOB)/AR               
            BF(2)=(X3*Y1-X1*Y3+(Y3-Y1)*XOB+(X1-X3)*YOB)/AR               
            BF(3)=(X1*Y2-X2*Y1+(Y1-Y2)*XOB+(X2-X1)*YOB)/AR 
-        IF (BF(1).GE.ZERO.AND.BF(2).GE.ZERO.AND.BF(3).GE.ZERO) RETURN!OK
+           IF (BF(1).GE.ZERO.AND.BF(2).GE.ZERO.AND.BF(3).GE.ZERO) RETURN !OK
 
 *....................................... LINEAR SEGMENTS (1D ELEMENTS)
 

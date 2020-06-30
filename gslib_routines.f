@@ -377,8 +377,12 @@ c
 c Exponential Variogram Model?
 c
             else if(it(ist).eq.2) then
+
+c           a is range and integral distance. 3a is effective range
+
                   cova = cova + cc(ist)*exp(-1.0D0*h/aa(ist))
 *                  cova = cova + cc(ist)*exp(-3.0*h/aa(ist))
+
 c
 c Gaussian Variogram Model?
 c
@@ -1322,7 +1326,7 @@ c
 
       subroutine SEARCH_SAMPLES
      ;                   (xloc,yloc,zloc,radsqd,irot,MAXROT,rotmat,
-     +                    nsbtosr,ixsbtosr,iysbtosr,izsbtosr,noct,
+     +                    nsbtosr,ixsbtosr,iysbtosr,izsbtosr,noct,nd,
      +                    x,y,z,tmp,nisb,nxsup,xmnsup,xsizsup,
      +                    nysup,ymnsup,ysizsup,nzsup,zmnsup,zsizsup,
      +                    nclose,close,infoct)
@@ -1387,7 +1391,7 @@ C_________________ Declaration of variables
 
       IMPLICIT NONE
 
-      INTEGER*4 IROT,MAXROT,NSBTOSR,NOCT,NXSUP,NYSUP,NZSUP,NCLOSE
+      INTEGER*4 IROT,MAXROT,NSBTOSR,NOCT,ND,NXSUP,NYSUP,NZSUP,NCLOSE
      ;         ,INFOCT
 
       INTEGER*4 IX,IY,IZ,ISUP,IXSUP,IYSUP,IZSUP,II,NUMS,I,NT,NA,J,IQ

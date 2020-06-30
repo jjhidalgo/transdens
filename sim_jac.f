@@ -55,7 +55,7 @@
      &,VISCOSITY ,VISCREF   ,VJAC        ,VOBSC    ,WATVOL  ,WORK
      &,WTOBSN    ,WTOBST    ,XNORVD,DVDP,IOLG_PAR,IOCTRA,HINI,WSPECHEAT
      &,WTHERMCON
-     ;,IDIMWGT   ,WGT_PAR  ,IPNT_PAR,IPOS     ,DERIV)
+     ;,IDIMWGT   ,WGT_PAR  ,IPNT_PAR,IPOS     ,DERIV,PARNAME)
 
 ********************************************************************************
 *
@@ -306,9 +306,10 @@
      &       ,BM_ND_FL(NUMNP,8,2)     ,BM_ND_TT(NUMNP,12,2)
  
       CHARACTER*20::FILENAME
+      CHARACTER::PARNAME(NPAR)*4
 
       INTEGER*4 IREDTIMGL,NUMDIVCGL,NUMDIVHGL,NCONVIFL
-     &,ISYMETRIC,ND,NFL_SIM,NTP_SIM,I_REC,INCLK,IORECATRA,IOFIRST,i
+     &,ISYMETRIC,ND,NFL_SIM,NTP_SIM,I_REC,INCLK,IORECATRA,IOFIRST
 
 	  IF(IFLAGS(3).EQ.1) CALL IO_SUB('SIM_JAC',0)
 
@@ -1034,7 +1035,7 @@ C------------------------- problems loop is interrupted. There
    61                             FORMAT
      &                            (/,'The first non-linear transport '
      &                              ,'has converged.',/
-     &                              ,'Simultaneus transport loop'
+     &                              ,'Simultaneous transport loop'
      &                              ,' continues',/)
 
                               END IF !IREDTIMGL.EQ.1 .OR. IOCONVGL.EQ.0
@@ -1391,7 +1392,8 @@ C------------------------- Coupled flow and transport inverse problem
      &                 ,IDIMWORK,IFLAGS    ,INEW     ,INEWT    ,INTI
      &                 ,IODIRECT,IPAR_DIR  ,ITERM    ,MAINF    ,MAXNB
      &                 ,MAXNBF  ,NBAND1    ,NFLAGS   ,NPAR     ,NPARALG
-     &                 ,NUMNP   ,PAR_DIR   ,SOLUTION ,WORK)
+     &                 ,NUMNP   ,PAR_DIR   ,SOLUTION ,WORK     ,PARNAME
+     &                 ,FILENAME)
 
 C------------------------- INEW and IOLD and  INEWT and IOLDT are interchanged.
 

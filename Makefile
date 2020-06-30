@@ -87,7 +87,7 @@ SRCS =	algeb.f alli.f alpha.f area_elem.f ass_covinv.f ass_eval.f \
 	sim_jac.f so_obj.f solution.f solve.f source_rdch.f \
 	spat_weight_obs.f src_ncard.f stat_outp.f \
 	state_variable_init.f store_var_scratch.f \
-	temp_weight_obs.f tempcoeff.f tracehjvj.f tracehv.f transdens.f \
+	temp_weight_obs.f tempcoeff.f tracehjvj.f transdens.f \
 	transport.f unshuffle_lhs.f unshuffle_rhs.f update_files_scratch.f \
 	update_parz.f update_sol_time.f update_state_variable.f update_time.f \
 	update_time_incr.f update_vectors_aux.f verify_bw.f watsolv_new.f \
@@ -186,7 +186,7 @@ OBJS =	$(addprefix $(OBJDIR)/, algeb.o alli.o alpha.o area_elem.o \
 	sim_jac.o so_obj.o solution.o solve.o source_rdch.o \
 	spat_weight_obs.o src_ncard.o stat_outp.o \
 	state_variable_init.o store_var_scratch.o \
-	temp_weight_obs.o tempcoeff.o tracehjvj.o tracehv.o transdens.o \
+	temp_weight_obs.o tempcoeff.o tracehjvj.o transdens.o \
 	transport.o unshuffle_lhs.o unshuffle_rhs.o update_files_scratch.o \
 	update_parz.o update_sol_time.o update_state_variable.o update_time.o \
 	update_time_incr.o update_vectors_aux.o verify_bw.o watsolv_new.o \
@@ -204,7 +204,7 @@ F90 = gfortran
 #F90FLAGS = -ggdb -fbounds-check -Wall -Wtabs -g3
 #F90FLAGS = -ggdb -Wall -Wtabs -g3
 #Release
-F90FLAGS = -O3
+F90FLAGS = -O3 -finit-local-zero
 LDFLAGS = 
 
 .SUFFIXES : .o .f .f90 .FOR
@@ -227,20 +227,60 @@ COMMON_MTDZ.FOR:
 EQUIV_MTDZ.FOR:
 MAIN_COMM.FOR:
 
-# Regla implícita para pasar .f a .o (forma antigua)
+# Regla impl√≠cita para pasar .f a .o (forma antigua)
 #.f.o:
 #	$(F90) $(F90FLAGS) -c $<
 
-# Regla implÌcita para pasar .f a .o (forma nueva "patern rule").
+# Regla impl√≠cita para pasar .f a .o (forma nueva "patern rule").
 $(OBJDIR)/%.o : %.f
 	$(F90) $(F90FLAGS) -c $< -o $@
 
 
 $(OBJDIR)/algeb.o: COMMON.FOR
+$(OBJDIR)/alpha.o: tracehjvj.f
 $(OBJDIR)/basisfunc_obs.o: COMMON.FOR
+$(OBJDIR)/buweight_obs.o: leel.f
+$(OBJDIR)/contribdev.o: position.f
+$(OBJDIR)/covpar_matrix.o: leel.f
 $(OBJDIR)/difmat_dmt.o: MAIN_COMM.FOR COMMON_DMT.FOR
 $(OBJDIR)/difmat_mtdz.o: COMMON_MTDZ.FOR EQUIV_MTDZ.FOR
 $(OBJDIR)/difmat_mz.o: COMMON_MTDZ.FOR
+$(OBJDIR)/endatinicond_aux.o: leel.f
+$(OBJDIR)/endatobs.o: leel.f
+$(OBJDIR)/entdat.o: ldimen.o
+$(OBJDIR)/entdat_dens.o: leel.f
+$(OBJDIR)/entdat_funnoli_grav.o: leel.f
+$(OBJDIR)/entdat_groups_zones.o: leel.f
+$(OBJDIR)/entdatix_coor.o: leel.f
+$(OBJDIR)/entdatix_zon.o: leel.f
+$(OBJDIR)/entdatlx_elem.o: ldimen.f leel.f
+$(OBJDIR)/entdatlx_zon.o: ldimen.f leel.f
+$(OBJDIR)/entvel.o: leel.f
+$(OBJDIR)/getvalue.o: position.f
+$(OBJDIR)/init_extrap.o: tempcoeff.f
+$(OBJDIR)/init_inv_prob_info.o: tempcoeff.f
+$(OBJDIR)/interp_eznum.o: ldimen.o
+$(OBJDIR)/jvj.o: getvalue.f
+$(OBJDIR)/lec_cfe.o: leel.f
+$(OBJDIR)/lec_cfn.o: leel.f
+$(OBJDIR)/lec_ft.o: leel.f
+$(OBJDIR)/lecdim.o: fileex.f leel.f
+$(OBJDIR)/modif_maxiter.o: fileex.f
+$(OBJDIR)/open_one_file.o: fileex.f
+$(OBJDIR)/opt_groups_zones.o: leel.f
 $(OBJDIR)/provisional.o: COMMON.FOR
+$(OBJDIR)/read_extdrift_zones.o: leel.f
+$(OBJDIR)/read_lin_comb.o: leel.f
+$(OBJDIR)/read_locations.o: leel.f
+$(OBJDIR)/read_par.o: leel.f
+$(OBJDIR)/read_search_drift.o: leel.f
+$(OBJDIR)/read_tra.o: leel.f
+$(OBJDIR)/read_variograms.o: leel.f
+$(OBJDIR)/residuals.o: weightresid.f histogram.f
 $(OBJDIR)/sim_jac.o: MAIN_COMM.FOR COMMON_DMT.FOR COMMON_MTDZ.FOR
+$(OBJDIR)/so_obj.o: contribdev.f histogram.f
+$(OBJDIR)/stat_outp.o: histogram.f
+$(OBJDIR)/tracehjvj.o: getvalue.f
 $(OBJDIR)/transdens.o: COMMON.FOR MAIN_COMM.FOR
+$(OBJDIR)/weightresid.o: getvalue.f
+$(OBJDIR)/write_stats.o: getparname.f getvalue.f histogram.f

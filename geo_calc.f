@@ -23,7 +23,6 @@
      ;,VSTATS_GS      ,WGT_PAR       ,WGT_UNK         ,WORK            
      ;,ZNWGT_GS       ,IACTSIMU      ,IDIMDATASC_GS   ,PARC_GS
      ;,IFLAG_SIMUL    ,COVPAR_GR)
-*    ,IZONMEAS_GS)
 
 ********************************************************************************
 *
@@ -285,7 +284,7 @@ C___________________________ Step 0: Declaration of variables
      ;         ,MXCLOSE_GS,MXDISC_GS,MXKRIG_GS,MXNPP_GS,LDIM_GS
      ;         ,MXNPRIM_GS,MXROT_GS,MXSAM_GS,MXSB_GS,MXZONPP_GS,IDIMWORK
      ;         ,IACTSIMU,IDIMDATASC_GS
-     ;         ,IOPT_GS(NGROUP_ZN,12),IO_KG_GS(NGROUP_ZN,16)
+     ;         ,IOPT_GS(MXGRPZN,20),IO_KG_GS(NGROUP_ZN,16)
      ;         ,IVPAR(NZPAR,4),INORPAR(NTYPAR),KXX(LMXNDL,NUMEL)
      ;         ,LTYPE(NUMEL),LXPAREL(NUMEL,NPAREL),IOWRITE(NWRITE)
      ;         ,LNNDEL(NUMEL),IPNT_PAR(NZPAR*IDIMWGT),NZONE_PAR(NTYPAR)
@@ -295,7 +294,6 @@ C___________________________ Step 0: Declaration of variables
      ;         ,IVARIO_GS(IDIMIVARIO_GS,2,NGROUP_ZN),IFLAGS(NFLAGS)
      ;         ,IZN_PP_GS(IDIMZONPP_GS),NUMSB_GS(MXSB_GS)
      ;         ,IFLAG_SIMUL(MXZONPP_GS)
-*     ;         ,IZONMEAS_GS(MXNZON_GS,NGROUP_ZN)
                                                                  ! Real external
       REAL*8 WORK(IDIMWORK),COVPAR(NPAR*(NPAR+1)/2),AREA(NUMEL)
      ;      ,COORD(NUMNP,3),COORDGR_GS(6,NGROUP_ZN),PARM(NPAR)
@@ -356,7 +354,7 @@ C___________________________         Also, "measurements" are assigned
       DO IGR=1,NGROUP_ZN
 
          IF (IOINV.GT.0. AND. IOPT_GS(IGR,6).GT.0) THEN
-   
+
             CALL RANDOM_PIPO
      ;(IOPT_GS(IGR,1)    ,IGR         ,IOPT_GS(IGR,6)    ,LMXNDL    
      ;,MAINF             ,MXMEASPP_GS ,NFLAGS            ,NPAREL        
@@ -397,7 +395,8 @@ C___________________________ Step 3: Initializes geostatistical arrays
          DO IZPAR=1,NZPAR
 
             IGROUP=IVPAR(IZPAR,3)
-            IF (IGROUP.LE.NGROUP_ZN. AND.IOPT_GS(IGROUP,1).EQ.1) THEN
+            IF (IGROUP .LE. 0) CYCLE
+            IF (IGROUP.LE.NGROUP_ZN .AND. IOPT_GS(IGROUP,1).EQ.1) THEN
                    
                IFIRSTPOS=(IZPAR-1)*IDIMWGT+1
                IF (IOPT_GS(IGROUP,6).NE.0) THEN   ! Variable pilot points
@@ -451,9 +450,9 @@ C___________________________            (conditional est. / sim.). (PARZ)
      ;,MXNVAR_GS       ,MXNZON_GS        ,MXROT_GS       ,MXSAM_GS       
      ;,MXSB_GS         ,MXZONPP_GS       ,NFLAGS         ,NGROUP_ZN      
      ;,NPAR            ,NPARDET          ,NTYPAR         ,NUMITER        
-     ;,NZPAR           ,NZONE_PAR(1)     ,PIPOVARIABLE   ,CLOSESAM_GS    
-     ;,COVPAR          ,CROSSCOV_GS      ,ESTKRIG_GS     ,EXDRZN_GS      
-     ;,ICHECK_GS       ,ICROSSCOV_GS     ,IFLAGS         ,IVPAR(1,3)     
+     ;,NZPAR           ,NZONE_PAR(1)     ,PIPOVARIABLE   ,CLOSESAM_GS
+     ;,COVPAR          ,ESTKRIG_GS       ,EXDRZN_GS      
+     ;,ICHECK_GS       ,ICROSSCOV_GS     ,IFLAGS         ,IVPAR(1,3)  
      ;,INDPAR          ,INORPAR          ,IO_KG_GS       ,IOLG_PAR       
      ;,IOPT_GS         ,IVPAR(1,2)       ,IPNT_PAR       ,IVPAR(1,1)     
      ;,IPOLDRIFT_GS    ,ISOZ             ,ISUPBL_GS      ,IVARIO_GS      
@@ -466,7 +465,7 @@ C___________________________            (conditional est. / sim.). (PARZ)
      ;,WGT_UNK         ,WORK             ,ZNWGT_GS
      ;,IACTSIMU        ,DATASC_GS        ,IDIMDATASC_GS  ,PARC_GS
      ;,IFLAG_SIMUL     ,COVPAR_GR)
-*     ,IZONMEAS_GS)
+
 
 C___________________________ Step 5: Corrects array PARZ if estimation is 
 C___________________________         performed logarithmically

@@ -32,7 +32,7 @@
      ;,IOSMFL       ,IOSMTP     ,PARC_GS
      ;!NUEVOS
      ;,IODENS_INI,ITPTVAR,    BETAC,CREF,DENSF,TEMPF,VISCREF,WSPECHEAT
-     &,WTHERMCON)
+     &,WTHERMCON, PARNAME)
 *****************************************************************************
 *
 * PURPOSE
@@ -238,7 +238,7 @@
 
        IMPLICIT REAL*8 (A-H,O-Z)
 
-       CHARACTER FILENAME(20)*20,DEVNAME(NDEVS)*10
+       CHARACTER FILENAME(20)*20,DEVNAME(NDEVS)*10,PARNAME(NPAR)*4
 
        DIMENSION 
      ;  ACTH(NUMEL), BTRA(NUMNP), CAUDAL(NUMNP), CCALIT(NUMNP),
@@ -265,14 +265,6 @@ C------------------------- Output message to know that the program is already
 C------------------------- inthis routine
 
        IF (IFLAGS(3).EQ.1) CALL IO_SUB ('ENTDAT',0)
-
-C_________________________ Corrects NPAR and NPARF to avoid problems with different
-C_________________________ checks. They will be reassigned at INVER subroutine
-
-*       IF (IOGEO.NE.0) THEN
-*         NPAR=NPAR-NPIPO
-*         NPARF=NPARF-NPIPO
-*       END IF
 
 C------------------------- Reads node numbers,coordinates,IX and boundary conditions
 C------------------------- Starts grid definition file
@@ -302,7 +294,7 @@ C------------------------- Location in array IXPARNP
           INCON =7
           INCONT=8
           INDMT =9
-	    INCLK = 10
+	  INCLK = 10
 
 C------------------------- Next assignations are to avoid reading of flow or 
 C------------------------- transport data when the number of problems of this
@@ -419,7 +411,7 @@ C------------------------- Reads zone parameters
      ; ,FILENAME  ,INDPAR   ,INORPAR  ,IOLG_PAR ,IOPT_GS   ,IPNT_PAR  
      ; ,ISOZ      ,IVPAR    ,LDIM     ,NFNLPAR  ,NFTPAR    ,NZONE_PAR 
      ; ,PAR_WGT   ,PARC     ,PARM     ,PARZ     ,STPAR     ,WGT_PAR   
-     ; ,NGROUP_ZN ,NPARDET  ,IOINV_GS ,WGT_UNK)    
+     ; ,NGROUP_ZN ,NPARDET  ,IOINV_GS ,WGT_UNK  ,PARNAME)    
 
 
 C------------------------- Reads matrix diffusion zones
@@ -458,7 +450,7 @@ C------------------------- Reads nonlinear parameters and/or gravity direction
           WSPECHEAT = 0D0
           WTHERMCON = 0D0
 
-	  END IF !IODENS_INI.EQ.1 .OR. ITPTVAR.EQ.1
+      END IF !IODENS_INI.EQ.1 .OR. ITPTVAR.EQ.1
 
 C------------------------- Reads time and time functions if a transient 
 C------------------------- problem is solved
@@ -603,11 +595,6 @@ C------------------------- If IERROR >0 program stops.
        
           STOP  'ERRORS ON INPUT DATA'
        ENDIF
-
-*       IF (IOGEO.NE.0) THEN
-*         NPAR=NPAR+NPIPO
-*         NPARF=NPARF+NPIPO
-*       END IF
        
 C------------------------- NPARF is set to one (when zero) because it is used
 C------------------------- to dimension some arrays

@@ -65,7 +65,7 @@ C--------------------------- For each element...
 
       SUMATOT= 0D0
       DSUMATOT = 0D0
-
+      TRACT = 0D0
 
 C--------------------------- sets element properties
 

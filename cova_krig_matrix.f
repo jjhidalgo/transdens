@@ -1,6 +1,6 @@
       SUBROUTINE COVA_KRIG_MATRIX
      ;(IDIMCOV_GS    ,IDIMCROSS    ,IOCOVPAR    ,IODEBUG   ,MAXROT        
-     ;,MXDISC_GS     ,NDISC        ,NESTED      ,NESTIM
+     ;,MXDISC_GS     ,NDISC        ,NESTED      ,NESTIM    ,NRESTRI       
      ;,NUGGET        ,NZEROS       ,COVA_KRIG   ,COVPAR    ,CROSSCOV      
      ;,ITYPEVARIO    ,MAT_DIFF     ,OFFSET      ,RANGE     ,ROTMAT    
      ;,SILL_NUGG     ,WEIGHTS      ,XESTIM      ,YESTIM    ,ZESTIM)
@@ -9,7 +9,7 @@ C_______________________ Step 0: Declaration of variables
 
       IMPLICIT NONE
                                                              ! Integer external
-      INTEGER*4 NESTIM,IDIMCROSS,NDISC,MXDISC_GS
+      INTEGER*4 NESTIM,IDIMCROSS,NDISC,MXDISC_GS,NRESTRI
      ;         ,NESTED,MAXROT,NZEROS,IDIMCOV_GS,IODEBUG,IOCOVPAR
      ;         ,ITYPEVARIO(NESTED)
                                                                 ! Real external
@@ -128,7 +128,7 @@ C_______________________ Step 1.1.4: Saves covariance
 
          END DO ! J=1,I
 
-      END DO ! I=1,NESTIM
+      END DO ! I=1,NESTIM+NRESTRI
 
 C_______________________ Step 2: Echoes kriging covariance matrix
 

@@ -14,19 +14,20 @@
 
       IF (IODEVICE(ND,3).EQ.1) THEN
         WRITE(MAINF,3000)BUDAT(1,NUMTBU),BUDAT(2,NUMTBU),BUDAT(3,NUMTBU)
- 3000   FORMAT(5X,'POINT LOCATION',/,5X,3F10.3,//,5X
+ 3000   FORMAT(5X,'POINT LOCATION',/,5X,3G17.8,//,5X
      ;        ,'NODES USED TO DESCRIBE POINT',/
      ; ,5X,'--------------------------',/,5X,
-     ;'OBS_NODE GRID_NODE         X         Y         Z   BASISFUNC.')
+     ;'OBS_NODE GRID_NODE         X         Y         ',
+     ;'     Z          BASIS FUNC.')
         SUM=0
         DO I=IODEVICE(ND,7),NUMTNODC
           J=INDEXNOD(I)
           WRITE(MAINF,3020)I,J,X(J),Y(J),Z(J),WTOBSN(I)
- 3020     FORMAT(8X,I5,5X,I5,F10.3,F10.3,F10.3,3X,F10.3)
+ 3020     FORMAT(8X,I5,5X,I5,3G14.7,3X,G15.8)
           SUM=SUM+WTOBSN(I)
         ENDDO
-        WRITE(MAINF,3025)SUM
- 3025   FORMAT(53X,'SUM',F10.3)
+        WRITE(MAINF,3025) SUM
+ 3025   FORMAT(63X,'SUM',G15.8)
       ENDIF
 
       IF (IODEVICE(ND,3).GE.2) THEN

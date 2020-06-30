@@ -145,15 +145,6 @@
      ;,IDDBFLUDTRA,IDDERVISC
      ;,IDHCALIT  ,IDDTMXDS     ,IDPARACD
      ;,IDDENSITY ,IDVISCOSITY,IDDELTAITER
-     ;,IDVARIO    ,IDROTMAT   ,IDPOS_MEAS ,IDPOS_MEAS2
-     ;,IDPOS_PIPO ,IDVAR      ,IDVAR2     ,IDSECAT
-     ;,IDPOS_BL   ,IDPOS_DIS  ,IDPOS_AUX  ,IDVSTATS
-     ;,IDTMAX     ,IDSEARCH   ,IDA        ,IDR
-     ;,IDRR       ,IDS        ,IDCLOSE    ,IDTMP
-     ;,IDAUXKRIG  ,IDBL_WGT   ,IDCROSS_COV
-     ;,IDSIMCOND  ,IDDIV_BL   ,IDPOSDAT_SC
-     ;,IDDATA_SC  ,IDORDER
-     ;,IDX,IDY,IDZ,IDTPREVINV
      ;,IDDEVICESTAT,IDEIGENVEC,IDRESID
      ;,IDDEVNAME
      ;,IDIBCOD  ,IDISOZ    ,IDNFTPAR    ,IDNFNLPAR          
@@ -168,58 +159,10 @@
      ;,IDIOTINT
      ;,IDKINT    ,IDISOLEQ  ,IDINTAUX, IDNFNLTIP
      ;,IDNFNLPRG ,IDLCOORD  ,IDIPARTNER
-     ;,IDIVARIO     ,IDIDRIF     ,IDIVA    ,IDIXSBTOSR
-     ;,IDIYSBTOSR   ,IDIZSBTOSR  ,IDNISB   ,IDIBL_PP
-     ;,IDIBL_N_WGT  ,IDNSAMPLE   ,IDINDVAR
      ;,IDOBSCLASS,IDITYPEPAR,IDIZPAR,IDRESIDPAR 
      ;,LASTII      ,LASTIR       ,MAINF
      ;,IDWGT_PAR  ,IDDERIV  ,IDWGT_UNK ,IDPARGOOD
-C--------------- Initialize to -1 some variables
-C--------------- not passed in the subroutine call.
 
-      IDVARIO = -1
-      IDROTMAT = -1
-      IDVAR = -1
-      IDSECAT = -1
-      IDPOS_BL = -1
-      IDPOS_DIS = -1
-      IDPOS_AUX = -1
-      IDTMAX = -1
-      IDSEARCH = -1
-      IDA = -1
-      IDR = -1
-      IDRR = -1
-      IDCLOSE = -1
-      IDTMP =-1
-      IDAUXKRIG = -1
-      IDSIMCOND  = -1
-      IDDIV_BL = -1
-      IDPOSDAT_SC = -1
-      IDORDER = -1
-      IDX = -1
-      IDY = -1
-      IDZ = -1
-      IDTPREVINV = -1
-      IDIVARIO = -1
-      IDIDRIF = -1
-      IDIVA = -1
-      IDIXSBTOSR = -1
-      IDIYSBTOSR = -1
-      IDIZSBTOSR = -1
-      IDNISB = -1
-      IDIBL_PP = -1
-      IDIBL_N_WGT = -1
-      IDNSAMPLE = -1
-      IDINDVAR = -1
-      IDS = -1
-      IDPOS_MEAS = -1
-      IDPOS_MEAS2 = -1
-      IDVAR2 = -1
-      IDPOS_PIPO = -1
-      IDVSTATS = -1
-      IDBL_WGT = -1
-      IDCROSS_COV = -1
-      IDDATA_SC = -1
 C--------------- Writes main header
 
        WRITE(MAINF,1500) 
@@ -293,30 +236,11 @@ C--------------- Writes all locations in array RV
      ;,'  DTRADFLU      ',IDDTRADFLU 
      ;,'  BCOUPLED      ',IDBCOUPLED   ,'  DTMXDS        ',IDDTMXDS
      ;,'  PARACD        ',IDPARACD     ,'  DENSITY       ',IDDENSITY
-     ;,'  VISCOSITY     ',IDVISCOSITY  ,'  DELTAITER     ',IDDELTAITER
-     ;,'  VARIO         ',IDVARIO     ,'  ROTMAT        ',IDROTMAT    
-     ;,'  POS_MEAS      ',IDPOS_MEAS  ,'  POS_MEAS2     ',IDPOS_MEAS2 
-     ;,'  POS_PIPO      ',IDPOS_PIPO  ,'  VAR           ',IDVAR       
-     ;,'  VAR2          ',IDVAR2      ,'  SECAT         ',IDSECAT     
-     ;,'  POS_BL        ',IDPOS_BL    ,'  POS_DIS       ',IDPOS_DIS   
-     ;,'  POS_AUX       ',IDPOS_AUX   ,'  VSTATS        ',IDVSTATS    
-     ;,'  TMAX          ',IDTMAX      ,'  SEARCH        ',IDSEARCH    
-     ;,'  A             ',IDA         ,'  R             ',IDR         
-     ;,'  RR            ',IDRR        ,'  IDS           ',IDS
-     ;,'  CLOSE         ',IDCLOSE     ,'  TMP           ',IDTMP       
-     ;,'  AUXKRIG       ',IDAUXKRIG  
-     ;,'  BL_WGT        ',IDBL_WGT    ,'  CROSS_COV     ',IDCROSS_COV 
-     ;,'  SIMCOND       ',IDSIMCOND   
-     ;,'  DIV_BL        ',IDDIV_BL    ,'  POSDAT_SC     ',IDPOSDAT_SC 
-     ;,'  DATA_SC       ',IDDATA_SC   ,'  ORDER         ',IDORDER
-     ,,'  X             ',IDX         ,'  Y             ',IDY
-     ;,'  Z             ',IDZ         ,'  TPREVINV      ',IDTPREVINV     
+     ;,'  VISCOSITY     ',IDVISCOSITY  ,'  DELTAITER     ',IDDELTAITER  
      ;,'  DEVICESTAT    ',IDDEVICESTAT,'  EIGENVEC      ',IDEIGENVEC  
      ;,'  RESID         ',IDRESID     ,'  RESIDPAR      ',IDRESIDPAR    
      ;,'  LASTIR        ',LASTIR
-               
-   
-    
+
 C--------------- Writes all locations in array IV
 
        WRITE(MAINF,2100)
@@ -345,16 +269,9 @@ C--------------- Writes all locations in array IV
      ;,'  ISOLEQ        ',IDISOLEQ      ,'  INTAUX        ',IDINTAUX
      ;,'  NFNLTIP       ',IDNFNLTIP     ,'  NFNLPRG       ',IDNFNLPRG
      ;,'  LCOORD        ',IDLCOORD      ,'  IPARTNER      ',IDIPARTNER
-     ;,'  IVARIO        ',IDIVARIO      ,'  IDRIF         ',IDIDRIF
-     ;,'  IVA           ',IDIVA         ,'  IXSBTOSR      ',IDIXSBTOSR
-     ;,'  IYSBTOSR      ',IDIYSBTOSR    ,'  IZSBTOSR      ',IDIZSBTOSR
-     ;,'  NISB          ',IDNISB        ,'  IBL_PP        ',IDIBL_PP
-     ;,'  IBL_N_WGT     ',IDIBL_N_WGT   ,'  NSAMPLE       ',IDNSAMPLE
-     ;,'  INDVAR        ',IDINDVAR      ,'  OBSCLASS      ',IDOBSCLASS
+     ;,'  OBSCLASS      ',IDOBSCLASS
      ;,'  ITYPEPAR      ',IDITYPEPAR    ,'  IZPAR         ',IDIZPAR
      ;,'  LASTII        ',LASTII
-     ;
-
 
 C--------------- Writes all locations in array KV
 
@@ -362,7 +279,7 @@ C--------------- Writes all locations in array KV
  2200  FORMAT(//,1X,'ARRAY KV',//)
 
        WRITE(MAINF,'(A16,I10)')
-     ;,'  DEVNAME         ',IDDEVNAME
+     ; '  DEVNAME         ',IDDEVNAME
 
       RETURN
       END

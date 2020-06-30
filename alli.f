@@ -24,25 +24,33 @@
 ************************************************************************
 ************************************************************************
 
-       SUBROUTINE CPUTIME (MAINF)
+       SUBROUTINE WRI_CPUTIME (MAINF,TINI,TEND)
 
 ******************************************************************
 *** IT WRITES THE TOTAL CPUTIME SINCE THE BEGINNING OF THE PROGRAM
 ******************************************************************
+       IMPLICIT NONE
+C-------------------------External
+       INTEGER*4:: MAINF
+       REAL*8:: TINI, TEND
 
-       REAL*4 DTIME,TARRAY(2),WW,XX
+C------------------------- Internal
 
-       WW=DTIME(TARRAY)
-       XX=TARRAY(1)
-       IHORAS=INT(XX/3600)
-       XX=XX-IHORAS*3600.
-       IMINUT=INT(XX/60)
-       XX=XX-IMINUT*60.
-       ISEGU=INT(XX+0.5)
+       INTEGER*4::IHORAS, IMINUT, ISEGU
+       REAL*8::TT
+
+       TT=TEND-TINI
+       IHORAS=INT(TT/3600)
+       TT=TT-IHORAS*3600.
+       IMINUT=INT(TT/60)
+       TT=TT-IMINUT*60.
+       ISEGU=INT(TT+0.5)
        IF (IHORAS.NE.0) THEN
           WRITE(MAINF,1) IHORAS,IMINUT,ISEGU
+          WRITE(*,1) IHORAS,IMINUT,ISEGU
        ELSE
           WRITE(MAINF,2) IMINUT,ISEGU
+          WRITE(*,2) IMINUT,ISEGU
        END IF
 
  1     FORMAT(//,2X,'TOTAL CPUTIME :',I3,' HOURS',I3,
@@ -50,7 +58,7 @@
  2     FORMAT(//,2X,'TOTAL CPUTIME :',I3,' MINUTES',I3,' SECONDS')
 
        RETURN
-       END
+       END SUBROUTINE
 
 ************************************************************************
 ************************************************************************

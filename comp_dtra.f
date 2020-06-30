@@ -30,8 +30,27 @@
 *                         and COMP_DTRA_L.
 *******************************************************************************
 
-       IMPLICIT REAL*8 (A-H,O-Z)
+       IMPLICIT NONE
+ 
+C------------------------- External
 
+      INTEGER*4::IDIMDTRA,IODENS,IOINV,IOVRWC,ITPTVAR,LMXNDL,NUMEL,NUMNP
+
+      REAL*8::BETAC,CREF,DENSREF,THETAT,WSPECHEAT
+
+      REAL*8::DENS
+
+      INTEGER*4::KXX(LMXNDL,NUMEL),LNNDEL(NUMEL)
+
+      REAL*8::ACTH(NUMEL)    ,AREA(NUMEL)   ,CCALAN(NUMNP)
+     &       ,CCALIT(NUMNP)  ,CAUX1(NUMNP)  ,CAUX2(NUMNP)
+     &       ,DENSITY(NUMEL) ,DTRA(NUMEL,IDIMDTRA)
+     &       ,DTRADFLU(NUMEL,LMXNDL*LMXNDL)
+     &       ,DTRADTRA(NUMEL,LMXNDL*LMXNDL)
+     &       ,DWDH(MAX(1,(IOVRWC-1)*2*LMXNDL),NUMEL)
+     &       ,RETARD(NUMEL)
+     &       ,WATVOL(MAX(1,(IOVRWC-1)*LMXNDL),NUMEL,3)
+      
        INTEGER*4::LINMET(3,2)
 
        IF (IOVRWC.LE.1) THEN

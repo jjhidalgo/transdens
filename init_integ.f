@@ -614,6 +614,8 @@ C------------------------- Assigns index for zonal arrays: PARC, IVPAR, etc
 C_______________________ Geostat. inv. prob.
 C_______________________ Initialization
 
+       MXLINCMB = 0
+       IDIMZONPP_GS = 0
        MXVGM_GS=0
        MXNST_GS=0
        MXROT_GS=0
@@ -627,7 +629,6 @@ C_______________________ Initialization
        MXNPRIM_GS=0
        IDIMCROSS = 0 !Not used?
        IDIMCROSS_GS=0
-       IDIMZONPP_GS = 0
        MXSAM_GS=0
        MXKRIG_GS=0
        MXCLOSE_GS=0
@@ -637,10 +638,11 @@ C_______________________ Initialization
        MXSB_GS=0
        MAX_1=0
        MAX_2=0
-       MXSC_GS=0
+       MXSC_GS=1
 
        IF (IOINV_GS.NE.0) THEN                             ! Geostat. inv. prob.
 
+         MXSC_GS=1
 C_______________________ Calculates maximum dimensions among geological forms
 
 
@@ -717,12 +719,10 @@ C_______________________ Calculates maximum dimensions among geological forms
          IDIMWORK=MAX0(IDIMWORK,2*IDIMHESS)
          IDIMDATASC_GS=MXZONPP_GS+MXMEASPP_GS
          IDIMCROSS_GS=IDIMDATASC_GS
-       ELSE
-         MXSC_GS=1
        END IF
 
        IDIMWGT=MAX0(MXLINCMB,MXNPP_GS)
-       IF (IDIMWGT.EQ.0) IDIMWGT=1         ! Necessary for dimension
+       IF (IDIMWGT.EQ.0) IDIMWGT=1   ! Necessary for dimensioning
 
 C------------------------- Writes all integer variables used for dimensioning 
 C------------------------- or indexing
@@ -797,7 +797,7 @@ C------------------------- or indexing
  2999  FORMAT(///,21X,'INDEXING OR DIMENSIONING VARIABLES ',/,
      ;            21X,'======== == ============ =========',//)
 
- 3000  FORMAT(2(A13,I5))
+ 3000  FORMAT(2(A13,I10))
 
 C--------------------------------------Write matrix types
 3010   FORMAT(///,21X,'MATRIX TYPES',/,
@@ -820,7 +820,7 @@ C--------------------------------------Write matrix types
 
       IF (IOPART.NE.0) THEN
           WRITE (MAINF,3010)
-          WRITE(MAINF,3020),ITYPAFLU, ITYPCFLU, ITYPDFLU
+          WRITE(MAINF,3020) ITYPAFLU, ITYPCFLU, ITYPDFLU
      ;    , ITYPBFLU, ITYPATRA, ITYPDTRA, ITYPBTRA 
      ;    ,ITYPFLUDSC, ITYPTRADSC, ITYPCOUPLDSC, ITYPDERIV
       END IF

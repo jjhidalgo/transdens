@@ -9,8 +9,8 @@
      ;,PHIMIN     ,XMARQ       ,XMAXIM      ,COVINV      ,COVPAR      
      ;,DLT_PAR    ,FOBJ_WGT    ,GRAD        ,HESS        ,HESSAUX     
      ;,IFLAGS     ,PARAUX      ,PARC        ,PARGOOD     ,PARM
-     ;,PARZ        ,VJAC        ,VOBS        ,VOBSC      ,WGT_UNK
-     ;,WORK        ,MEASTYP)
+     ;,PARZ        ,VJAC       ,VOBS        ,VOBSC      ,WGT_UNK
+     ;,WORK        ,MEASTYP,   PHI)
 
 ********************************************************************************
 *
@@ -171,7 +171,7 @@ C_______________________ Step 0: Declaration of variables
      ;         ,IFLAGS(NFLAGS),MEASTYP(NUMTOBS)
                                                                  ! Real external
       REAL*8 FNEW,FOLD,OBJHED,OBJCON,OBJPAR,XMARQ,XMAXIM,GNORM,DMINF,EPS
-     ;      ,GMNOR,GMNOR1,GNORM1,ALF,PHIMAX,PHIMIN,COSMIN
+     ;      ,GMNOR,GMNOR1,GNORM1,ALF,PHIMAX,PHIMIN,COSMIN,PHI
      ;      ,PARC(NPAR),PARAUX(NPAR),HESS(NPAR*(NPAR+1)/2),GRAD(NPAR)
      ;      ,DLT_PAR(NPAR),WORK(2*NPAR),COVINV(IDIMCOV),FOBJ_WGT(NSTAT)
      ;      ,COVPAR(NPAR*(NPAR+1)/2),PARM(NPAR),VOBS(NUMTOBS)
@@ -179,16 +179,13 @@ C_______________________ Step 0: Declaration of variables
      ;      ,HESSAUX(NPAR*(NPAR+1)/2),PARGOOD(NZPAR),PARZ(NZPAR)
                                                               ! Integer internal
       INTEGER*4 ISOL
-                                                                 ! Real internal
-      REAL*8 PHI
+
 
       IF (IFLAGS(3).NE.0) CALL IO_SUB('MARQUARDT',0)
 
 C_______________________ PART A: Objective function has increased: BAD ITERATION       
 
       IF (ISUMFO.NE.0) THEN
-
-         PHI=0.D0       ! in a bad iteration phi is not computed
 
 C_______________________ Step A.1: Echoes information of BAD ITERATION
       
@@ -243,16 +240,6 @@ C_______________________ PART B: Objective function has diminished: GOOD ITER.
 C_______________________ Step B.1: Init.counter of bad iter. since last good one
 
         NITERF1=0
-        IF (NUMITER.EQ.1) PHI=0.D0   ! Local variable not initialized
-
-C_______________________ Step B.4: Checks the goodness of the quadratic approach 
-C_______________________           of the objective function and updates 
-C_______________________           Marquardt's parameter accordingly
-
-        IF (NUMITER.GT.1) CALL COMP_PHI_QUADR
-     ;(ALF     ,FNEW     ,FOLD     ,NPAR     ,NUMAX
-     ;,NUMIN   ,NUMITER  ,PHI      ,PHIMAX   ,PHIMIN
-     ;,XMARQ   ,DLT_PAR  ,GRAD     ,HESS)
        
 C_______________________ Step B.2: Echoes Marquardt's process indicators
 
@@ -277,6 +264,15 @@ C_______________________           and echoes parameters to scratch file
         CALL EQUAL_ARRAY (PARAUX,PARC,NPAR)
         CALL EQUAL_ARRAY (PARGOOD,PARZ,NZPAR)
         IF (IOWIT.NE.0) WRITE(70) ISUMFO,NUMITER,PARGOOD
+
+C_______________________ Step B.4: Checks the goodness of the quadratic approach 
+C_______________________           of the objective function and updates 
+C_______________________           Marquardt's parameter accordingly
+
+        IF (NUMITER.GT.1) CALL COMP_PHI_QUADR
+     ;(ALF     ,FNEW     ,FOLD     ,NPAR     ,NUMAX
+     ;,NUMIN   ,NUMITER  ,PHI      ,PHIMAX   ,PHIMIN
+     ;,XMARQ   ,DLT_PAR  ,GRAD     ,HESS)
 
 C_______________________ Step B.5: Calculates gradient vector and its norm
 
@@ -334,7 +330,7 @@ C_______________________           Marquardt's parameter is increased
 
         CALL CHECK_PAR_ANGLE 
      ;(COSMIN  ,GNORM  ,NPAR  ,NUMIN  ,XMARQ  ,DLT_PAR  ,GRAD)
-            
+
       END DO ! ISOL=1,MAXICOS
 
       IF (IFLAGS(3).NE.0) CALL IO_SUB('MARQUARDT',1)

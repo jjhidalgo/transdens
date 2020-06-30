@@ -192,10 +192,10 @@ C_______________________           samples to estimate block.
          CALL SEARCH_SAMPLES
      ;(XEST     ,YEST      ,ZEST     ,RADIUS*RADIUS   ,NESTED+1 
      ;,MAXROT   ,ROTMAT    ,NSBTOSR  ,IXSBTOSR        ,IYSBTOSR 
-     ;,IZSBTOSR ,NOCTANT   ,XDATA    ,YDATA           ,ZDATA
-     ;,TMP       ,NDATA_SB ,NSUP_BL_X,XMNSUP          ,XSIZSUP
-     ;,NSUP_BL_Y ,YMNSUP   ,YSIZSUP         ,NSUP_BL_Z,ZMNSUP
-     ;,ZSIZSUP   ,NCLOSE   ,CLOSE           ,INF_OCTANTS)
+     ;,IZSBTOSR ,NOCTANT   ,NDATA    ,XDATA           ,YDATA
+     ;,ZDATA    ,TMP       ,NDATA_SB ,NSUP_BL_X       ,XMNSUP
+     ;,XSIZSUP  ,NSUP_BL_Y ,YMNSUP   ,YSIZSUP         ,NSUP_BL_Z
+     ;,ZMNSUP   ,ZSIZSUP   ,NCLOSE   ,CLOSE           ,INF_OCTANTS)
 
          NACCEPT_SAMPLES=0
          DO ISAMPLE=1,NCLOSE
@@ -263,6 +263,7 @@ C_______________________            calculation purposes
                          ! Calculates kriging matrix (measurements covariances)
 
          DO ISAMPLE = 1,NACCEPT_SAMPLES 
+
             DO JSAMPLE = 1,NACCEPT_SAMPLES 
  
                CALL COVARIANCE

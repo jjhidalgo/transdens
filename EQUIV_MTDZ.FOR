@@ -1,5 +1,5 @@
 
-      INTEGER IR_VOL,            ! Pointer to VOL_MZ
+      INTEGER*4 IR_VOL,            ! Pointer to VOL_MZ
      .        IR_AN,             ! Pointer to AN_MZ
      .        IR_EXP,            ! Pointer to EXP_MZ
      .        IR_DEXP,           ! Pointer to DEXP_MZ

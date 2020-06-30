@@ -372,7 +372,7 @@
           IF(INT(BUDAT(4,NBU)+0.5).EQ.0) THEN
             IF (INPWR.NE.0) WRITE(MAINF,3220) 
      ;        NBU,BUDAT(1,NBU),BUDAT(2,NBU),BUDAT(3,NBU)
- 3220       FORMAT(1X,' BASIC UNIT ',I5,' POINT ',3F10.3)
+ 3220       FORMAT(1X,' BASIC UNIT ',I5,' POINT ',3G17.8) !antes 3F10.3
 
           ELSE
 

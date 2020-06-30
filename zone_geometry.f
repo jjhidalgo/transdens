@@ -362,7 +362,7 @@ C______________________ Step 6: Echoes positions of zones cog
      ;        ,5X,'===== === ========= == ======',//)
         DO I=1,NZON_GS
           WRITE(MAINF,2100) I,POSZN_GS(I,1),POSZN_GS(I,2),POSZN_GS(I,3)
- 2100     FORMAT(I5,3F10.5)
+ 2100     FORMAT(I5,3(2X,F10.3))
         END DO
       END IF
 

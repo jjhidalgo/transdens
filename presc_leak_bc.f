@@ -7,7 +7,10 @@
      &          ,MAXNB      ,NBAND    ,NPPNP     ,NUMEL    ,NUMNP
      &          ,PARNP      ,THETA    ,VAUX1     ,WSPECHEAT)
    
-
+c     ******************************************************************
+c     Adds leakeage contribution to LHS.
+c
+c     ******************************************************************
       IMPLICIT NONE 
 
 C--------------------------- EXTERNAL VARIABLES: INTEGERS
