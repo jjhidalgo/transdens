@@ -308,8 +308,9 @@
       CHARACTER*20::FILENAME
       CHARACTER::PARNAME(NPAR)*4
 
-      INTEGER*4 IREDTIMGL,NUMDIVCGL,NUMDIVHGL,NCONVIFL
-     &,ISYMETRIC,ND,NFL_SIM,NTP_SIM,I_REC,INCLK,IORECATRA,IOFIRST
+      INTEGER*4::IREDTIMGL,NUMDIVCGL,NUMDIVHGL,NCONVIFL
+     &          ,ISYMETRIC,ND,NFL_SIM,NTP_SIM,I_REC,INCLK,IORECATRA
+     &          ,IOFIRST  ,IDESC_COUPL
 
 	  IF(IFLAGS(3).EQ.1) CALL IO_SUB('SIM_JAC',0)
 
@@ -327,6 +328,7 @@
       INCON = 7  !index for external concentration by nodes in lxparnp etc
       INCLK = 10 !index for conc. leakage coeficient by nodes in lxparnp etc
       IUCAL = 15 !index for INI file unit
+      ITERM = 4
 
       NFL_SIM = MAX(1,IOPTS(28)*NPBFL)  ! # of simultaneous flow pb 
       NTP_SIM = MAX(1,IOPTS(29)*NPBTP)  ! # of simultaneous tpt pb
@@ -798,7 +800,7 @@ C------------------------- are required for output purposes.
      &                    ,NPAREL   ,NPPEL
      &                    ,NTYPEL   ,NUMEL    ,NUMNP    ,NZTRA
      &                    ,PAREL    ,POINTWEIGHT        ,NFLAGS
-     ;                    ,QXYZ     ,VD       ,XNORVD)
+     ;                    ,QXYZ     ,VD       ,XNORVD   ,IOINV)
 
 
                   END IF !IOCONVF.EQ.1.AND. ...
@@ -991,7 +993,7 @@ C------------------------- If density dependent flow IS BEING solved
      &          ,IDIMCFLU      ,IDIMDFLU      ,IDIMDTRA      ,IDIMWORK
      &          ,IFLAGS        ,INDENDDT      ,INDSSTR       ,INTI
      &          ,IOCONSRC      ,IOCONVF       ,IOCONVGL      ,IOCONVT
-     &          ,IODENS        ,IODIRECT      ,IOFLLI
+     &          ,IODENS        ,IODIRECT      ,IOFLLI        ,IOINV
      &          ,IOITERGLEND   ,IOPTS         ,IORTS         ,IOTRLI
      &          ,IOTRS         ,IOWRITE       ,IPAR_DIR      ,IREDTIMC
      &          ,IREDTIMGL     ,IREDTIMH      ,ISOLFL        ,ISOLTR
@@ -1008,7 +1010,7 @@ C------------------------- If density dependent flow IS BEING solved
      &          ,RESCMAXGL     ,RESCMAXGLOLD  ,RESCMAXOLD    ,RESHMAX
      &          ,RESHMAXGL     ,RESHMAXGLOLD  ,RESHMAXOLD    ,SOLUTION
      &          ,SOURCE        ,TINC          ,WATVOL        ,WORK
-     &          ,WSPECHEAT)
+     &          ,WSPECHEAT     ,IDESC_COUPL)
 
                           ENDIF !(IODENS.EQ.0)
 
@@ -1393,7 +1395,7 @@ C------------------------- Coupled flow and transport inverse problem
      &                 ,IODIRECT,IPAR_DIR  ,ITERM    ,MAINF    ,MAXNB
      &                 ,MAXNBF  ,NBAND1    ,NFLAGS   ,NPAR     ,NPARALG
      &                 ,NUMNP   ,PAR_DIR   ,SOLUTION ,WORK     ,PARNAME
-     &                 ,FILENAME)
+     &                 ,FILENAME,IDESC_COUPL)
 
 C------------------------- INEW and IOLD and  INEWT and IOLDT are interchanged.
 

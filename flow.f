@@ -402,7 +402,8 @@ C------------------------- fluid density and viscosity are computed.
 C------------------------- Checks if derivatives of buoyancy have to
 C------------------------- be computed.
 
-              IF (LINMET(2,2).EQ.2 .OR. LINMET(3,2).GT.1) THEN
+              IF (LINMET(2,2).EQ.2 .OR. LINMET(3,2).GT.1 .OR.
+     &            (IODENS.EQ.1 .AND. IOINV.EQ.3)) THEN
                   IOCALCDEVT = 1
               END IF
 
@@ -467,7 +468,13 @@ C-------------------- together, then calculate DFLUDTRA
 
               IF (LINMET(3,2).GT.1) IOCALCDEVT = 1
       
-      
+C-------------------- if we solve inverse problem with variable density
+C-------------------- we need dfludflu and dfludtra
+
+              IF (IODENS.EQ.1 .AND. IOINV.EQ.3) THEN
+                 IOCALCDEVF = 1
+                 IOCALCDEVT = 1
+              END IF
 C-------------------- if derivatives of some sort need to be calculated
 
               IOCALCDEV=MAX(IOCALCDEVF, IOCALCDEVT)

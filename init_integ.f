@@ -459,8 +459,8 @@ C------------------------- ACOUPLEDDSC
       IA_COUPL_ROWS = 0
       IA_COUPL_COLS = 0
 
-      IF (IODENS.EQ.1 .AND. ICAN_CN.EQ.1) THEN
-
+      IF (IODENS.EQ.1 .AND. ICAN_CN.EQ.1 .OR.
+     &    (IODENS.EQ.1 .AND. IOINV.EQ.3)) THEN
           IF(IOSPARSE.EQ.0) THEN      !Banded
 
               IA_COUPL_ROWS = 2*NUMNP
@@ -468,7 +468,7 @@ C------------------------- ACOUPLEDDSC
               ITYPCOUPLDSC = 8
 
 C------------------------- If we use coupled newton, WORK might need
-C------------------------- more space. Tthe needed space is
+C------------------------- more space. The needed space is
 C------------------------- NUMNP * (NBAND +1) (for a generic matrix).
 C------------------------- Coupled bandwidth is 2*NBAND +1
 C------------------------- Coupled number of nodes is 2*NUMNP

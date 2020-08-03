@@ -1,10 +1,10 @@
       SUBROUTINE COMP_ATRA_REC_FOD
      &          (ACTH     ,AREA     ,ATRA     ,BETAC    ,CAUX1
      &          ,CREF     ,DENSREF  ,DTRADFLU ,DTRADTRA ,DWDH
-     &          ,IODENS   ,IONEWT   ,IOVRWC   ,ITPTVAR  ,LINMET
-     &          ,LMXNDL   ,NPPEL    ,NTYPAR   ,NUMEL    ,NUMNP
-     &          ,KXX      ,LNNDEL   ,NZONE_PAR,PAREL    ,THETAT
-     &          ,WATVOL)
+     &          ,IODENS   ,IOINV    ,IONEWT   ,IOVRWC   ,ITPTVAR
+     &          ,LINMET   ,LMXNDL   ,NPPEL    ,NTYPAR   ,NUMEL
+     &          ,NUMNP    ,KXX      ,LNNDEL   ,NZONE_PAR,PAREL
+     &          ,THETAT   ,WATVOL)
 
 
 ********************************************************************************
@@ -22,8 +22,8 @@
 
 C------------------------- External
 
-      INTEGER*4::IODENS   ,IONEWT   ,IOVRWC   ,ITPTVAR  ,LMXNDL
-     &          ,NPPEL    ,NTYPAR   ,NUMEL    ,NUMNP
+      INTEGER*4::IODENS   ,IOINV    ,IONEWT   ,IOVRWC   ,ITPTVAR
+     &          ,LMXNDL   ,NPPEL    ,NTYPAR   ,NUMEL    ,NUMNP
 
       REAL*8::BETAC,CREF,DENSREF,THETAT
 
@@ -139,9 +139,11 @@ C------------------------- Lambda * (WATVOL + alfa_s) * NjNi
 
 
 C------------------------- Derivatives of FOD w.r.t. concentration.
-C------------------------- Only if Newton's method is used.
+C------------------------- Only if Newton's method is used
+C------------------------- or inverse problem with variable density.
 
-                  IF (LINMET(2,2).EQ.2 .OR. LINMET(3,2).EQ.2) THEN
+                  IF (LINMET(2,2).EQ.2 .OR. LINMET(3,2).EQ.2 .OR.
+     &                (IODENS.EQ.1 .AND. IOINV.EQ.3)) THEN
 
                       DFODDW = THETAT*BETAC*FOD*CAUX1(INODE)
 
@@ -151,8 +153,10 @@ C------------------------- Only if Newton's method is used.
 
 C------------------------- Derivatives of FOD w.r.t. head.
 C------------------------- Only coupled Newton's method.
+C------------------------- or inverse problem with variable density.
 
-                  IF (LINMET(3,2).EQ.2) THEN
+                  IF (LINMET(3,2).EQ.2 .OR.
+     &                (IODENS.EQ.1 .AND. IOINV.EQ.3)) THEN
 
                       IF (IOVRWC.LE.1) THEN
 
@@ -185,7 +189,7 @@ C------------------------- Only coupled Newton's method.
 
                           END IF !J.NE.I
                       END DO !J=1,NNUD
-                  END IF !LINMET(3,2).EQ.2
+                  END IF !LINMET(3,2).EQ.2 .OR. (IODENS.EQ.1 .AND. IOINV.EQ.3)
               END IF !NZONE_PAR(11).NE.0 .AND. ITPTVAR.NE.1
 
 C------------------------- Update of ATRA matrix

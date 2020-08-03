@@ -8,7 +8,7 @@
      &          ,LTYPE    ,LXPAREL  ,MAXPG    ,NPAREL
      &          ,NPPEL    ,NTYPEL   ,NUMEL    ,NUMNP
      &          ,NZTRA    ,PAREL    ,POINTWEIGHT
-     &          ,NFLAGS   ,QXYZ     ,VD       ,XNORVD)
+     &          ,NFLAGS   ,QXYZ     ,VD       ,XNORVD, IOINV)
 ********************************************************************************
 *
 * PURPOSE
@@ -72,7 +72,7 @@
        IMPLICIT NONE
 C---------------------------  EXTERNAL VARIABLES: SCALARS
 
-      INTEGER*4::IDIMQ,IOCALCDEVF,IOCALCDEVT,IODENS,IODIM,K
+      INTEGER*4::IDIMQ,IOCALCDEVF,IOCALCDEVT,IODENS,IODIM, IOINV
      &          ,LMXNDL,MAXPG,NPAREL,NPPEL,NTYPEL,NUMEL,NFLAGS
      &          ,NUMNP,NZTRA,IOCALCDEV,IOFLLI,gravel(numel,iodim)
 
@@ -96,7 +96,7 @@ C---------------------------  EXTERNAL VARIABLES: ARRAYS
 
 C---------------------------  INTERNAL VARIABLES: SCALARS
 
-      INTEGER*4::I,L,LD, LANI, NZONE,ISZ,ISMAX,IS,IELEMTYP,NNUD
+      INTEGER*4::I,K,L,LD, LANI, NZONE,ISZ,ISMAX,IS,IELEMTYP,NNUD
 
       REAL*8::AREAL, XNOR
 
@@ -116,17 +116,18 @@ C--------------------------- if we do parameter estimation.
 
       IF (IODENS.EQ.1) THEN
 
-          IF (LINMET(3,2).EQ.2 .OR. LINMET(2,2).EQ.2) THEN
+         IF (LINMET(3,2).EQ.2 .OR. LINMET(2,2).EQ.2 .OR.
+     &       IOINV.EQ.3) THEN
 
               IOCALCDEVT = 1
 
-          END IF !LINMET(3,2).EQ.2) .OR. LINMET(2,2).EQ.2
+          END IF !LINMET(3,2).EQ.2) .OR. LINMET(2,2).EQ.2 .OR. IOINV.EQ.3
 
       END IF !IODENS.EQ.1
 
       IOCALCDEVF = 0
 
-      IF (IODENS.EQ.1 .AND. LINMET(3,2).EQ.2) THEN
+      IF (IODENS.EQ.1 .AND. (LINMET(3,2).EQ.2 .OR. IOINV.EQ.3)) THEN
 
           IOCALCDEVF = 1
 

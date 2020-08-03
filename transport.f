@@ -299,10 +299,10 @@ C------------------------- to ATRA matrix
                   CALL COMP_ATRA_REC_FOD
      &                (ACTH     ,AREA     ,ATRA     ,BETAC    ,CAUX1
      &                ,CREF     ,DENSREF  ,DTRADFLU ,DTRADTRA ,DWDH
-     &                ,IODENS   ,IONEWT   ,IOVRWC   ,ITPTVAR  ,LINMET
-     &                ,LMXNDL   ,NPPEL    ,NTYPAR   ,NUMEL    ,NUMNP
-     &                ,KXX      ,LNNDEL   ,NZONE_PAR,PAREL    ,THETAT
-     &                ,WATVOL)
+     &                ,IODENS   ,IOINV    ,IONEWT   ,IOVRWC   ,ITPTVAR
+     &                ,LINMET   ,LMXNDL   ,NPPEL    ,NTYPAR   ,NUMEL
+     &                ,NUMNP    ,KXX      ,LNNDEL   ,NZONE_PAR,PAREL
+     &                ,THETAT   ,WATVOL)
 
 C------------------------- Initializes RHS (BTRA) to zero.
 
@@ -368,8 +368,8 @@ C------------------------- left hand side.
 
 C-------------------------  DBTRADTRA <=> PARNP(1,6) (only conc. leakage
 C-------------------------  has derivatives w. r. t. conc.)
-
-
+C-------------------------  No need to call if inverse problem with variable
+C-------------------------  density because it is called again in coupled_flow_transport.
                       IF (IONEWT.GT.0) THEN
 
                           ALLOCATE (DERB(NUMNP))

@@ -234,7 +234,7 @@ C--------------------------- transformation (Jacobian matrix).
 
               IF (IOCALCDEV.EQ.1) THEN
 
-                  DO J=1,NNUD
+                 DO J=1,NNUD
 
                       IJPOS = (I-1)*NNUD + J
 
@@ -247,6 +247,5 @@ C--------------------------- transformation (Jacobian matrix).
 
           END DO !I=1,NNUD
       END DO     !DO L=1,NUMEL
-
 
       END SUBROUTINE COMP_BFLU_BUOYANCY

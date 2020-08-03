@@ -7,7 +7,7 @@
      &          ,IODIRECT,IPAR_DIR  ,ITERM    ,MAINF    ,MAXNB
      &          ,MAXNBF  ,NBAND1    ,NFLAGS   ,NPAR     ,NPARALG
      &          ,NUMNP   ,PAR_DIR   ,SOLUTION ,WORK     ,PARNAME
-     &          ,DIMFILE)
+     &          ,DIMFILE ,IDESC_COUPL)
 
 ********************************************************************************
 *
@@ -26,7 +26,7 @@ C------------------------- External
      &          ,IDIMDERH ,IDIMWORK ,INEW     ,INEWT    ,INTI
      &          ,IODIRECT ,ITERM    ,MAINF    ,MAXNB    ,MAXNBF
      &          ,NBAND1   ,NFLAGS   ,NPAR     ,NPARALG  ,NUMNP
-
+     &          ,IDESC_COUPL
       
       INTEGER*4::IAD_D(2*MAXNB,2*NUMNP)  ,IADD_D(2*NUMNP)
      &          ,IADN_D(2*NUMNP)         ,IAFD_D(2*MAXNBF,NUMNP*2)
@@ -51,6 +51,9 @@ C------------------------- Internal
 
 C------------------------- First executable statement
 
+
+      IF(IFLAGS(3).EQ.1) CALL IO_SUB('JAC_COUPLED',0)
+
       strFmt1 = ''
       WRITE (strFmt1,*) NPAR
       strFmt1 = '(I5,'//Trim(AdjustL(strFmt1))//'F15.10)'
@@ -62,13 +65,12 @@ C-------------------- Writes DERC befor solving
 
           WRITE(747,*) 'DERH BEFORE INTI = ',INTI
           WRITE(746,*) 'DERC BEFORE INTI = ',INTI
+
           DO I=1,NUMNP
               WRITE(747,strFmt1) I,(DERH(I,J,INEW),J=1,NPAR)
               WRITE(746,strFmt1) I,(DERC(I,J,INEW),J=1,NPAR)
           END DO !I=1,NUMNP
-
       END IF !IFLAGS(25).GT.0
-
       DO IPAR=1,NPAR
 
           CALL ASSEMBLE_RHS_COUPLED
@@ -77,7 +79,7 @@ C-------------------- Writes DERC befor solving
 
           CALL SOLVE
      &        (IA_COUPLED_DSC_ROWS,IA_COUPLED_DSC_COLS,2*NUMNP   
-     &        ,1           ,IPAR_DIR(21)  ,IDIMWORK      ,IODIRECT    ,3
+     &        ,IDESC_COUPL ,IPAR_DIR(21)  ,IDIMWORK      ,IODIRECT    ,3
      &        ,INTI        ,IPAR_DIR(18)  ,IPAR_DIR(22)  ,0         
      &        ,ITERM       ,IPAR_DIR(15)  ,MAINF
      &        ,2*NBAND1    ,2*IPAR_DIR(24),IPAR_DIR(20)  ,IPAR_DIR(17)
@@ -85,7 +87,7 @@ C-------------------- Writes DERC befor solving
      &        ,A_COUPL_DSC ,A_COUPL_DSCF  ,BCOUPLED      ,IAD_D
      &        ,IADD_D      ,IADN_D        ,IAFD_D        ,IAFDD_D
      &        ,IAFDN_D     ,WORK          ,SOLUTION)
-
+              IDESC_COUPL=1
 
           CALL UNSHUFFLE_RHS
      &        (DERC(1,IPAR,INEWT),DERH(1,IPAR,INEW),NUMNP,SOLUTION)
@@ -192,5 +194,5 @@ c-Writes sensitivity to parameters
 
       END IF !IFLAGS(29).GT.0
 
-
+      IF(IFLAGS(3).EQ.1) CALL IO_SUB('JAC_COUPLED',1)
       END SUBROUTINE JAC_COUPLED

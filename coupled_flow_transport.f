@@ -17,11 +17,11 @@
      &          ,IDIMDTRA      ,IDIMWORK      ,IFLAGS        ,INDENDDT
      &          ,INDSSTR       ,INTI          ,IOCONSRC      ,IOCONVF
      &          ,IOCONVGL      ,IOCONVT       ,IODENS        ,IODIRECT
-     &          ,IOFLLI        ,IOITERGLEND   ,IOPTS         ,IORTS
-     &          ,IOTRLI        ,IOTRS         ,IOWRITE       ,IPAR_DIR
-     &          ,IREDTIMC      ,IREDTIMGL     ,IREDTIMH      ,ISOLFL
-     &          ,ISOLTR        ,ISPARSE       ,ITERGL        ,ITERGLMX
-     &          ,ITERM         ,ITERTOTGL     ,ITPTVAR
+     &          ,IOFLLI        ,IOINV         ,IOITERGLEND   ,IOPTS
+     &          ,IORTS         ,IOTRLI        ,IOTRS         ,IOWRITE
+     &          ,IPAR_DIR      ,IREDTIMC      ,IREDTIMGL     ,IREDTIMH
+     &          ,ISOLFL        ,ISOLTR        ,ISPARSE       ,ITERGL
+     &          ,ITERGLMX      ,ITERM         ,ITERTOTGL     ,ITPTVAR
      &          ,ITYPACOUPLDSC ,ITYPCFLU      ,ITYPDFLU      ,KXX
      &          ,LINMET        ,LMXNDL        ,LNNDEL        ,MAINF
      &          ,MAXNB         ,MAXNBF        ,MAXNN         ,NBAND
@@ -33,8 +33,8 @@
      &          ,PARNP         ,RESCMAX       ,RESCMAXGL
      &          ,RESCMAXGLOLD  ,RESCMAXOLD    ,RESHMAX       ,RESHMAXGL
      &          ,RESHMAXGLOLD  ,RESHMAXOLD    ,SOLUTION      ,SOURCE
-     &          ,TINC          ,WATVOL        ,WORK          ,WSPECHEAT)
-
+     &          ,TINC          ,WATVOL        ,WORK          ,WSPECHEAT
+     &          ,IDESC_COUPL)
 
       IMPLICIT NONE
 
@@ -43,15 +43,15 @@
      &          ,IDIMATRA ,IDIMCFLU ,IDIMDFLU ,IDIMDTRA
      &          ,IDIMWORK ,INDENDDT ,INDSSTR  ,INTI    ,IOCONSRC
      &          ,IOCONVF  ,IOCONVGL ,IOCONVT  ,IODENS   ,IODIRECT
-     &          ,IOFLLI   ,IOITERGLEND        ,IORTS    ,IOTRLI
-     &          ,IOTRS    ,IREDTIMC ,IREDTIMH ,ISOLFL   ,ISOLTR
-     &          ,ISPARSE  ,ITERGL   ,ITERGLMX ,ITERM    ,ITERTOTGL
-     &          ,ITPTVAR  ,ITYPACOUPLDSC      ,ITYPCFLU ,ITYPDFLU
-     &          ,LMXNDL   ,MAINF    ,MAXNB    ,MAXNBF   ,MAXNN
-     &          ,NBAND    ,NBAND1   ,NCONVIFL ,NCONVITR ,NFLAGS
-     &          ,NOPTS    ,NPARALG  ,NPBFL    ,NPBMX    ,NPBTP
-     &          ,NPPEL    ,NPPNP    ,NTYPAR   ,NUMEL    ,NUMNP
-     &          ,NWRITE
+     &          ,IOFLLI   ,IOINV    ,IOITERGLEND        ,IORTS
+     &          ,IOTRLI   ,IOTRS    ,IREDTIMC ,IREDTIMH ,ISOLFL
+     &          ,ISOLTR   ,ISPARSE  ,ITERGL   ,ITERGLMX ,ITERM
+     &          ,ITERTOTGL,ITPTVAR  ,ITYPACOUPLDSC      ,ITYPCFLU
+     &          ,ITYPDFLU ,LMXNDL   ,MAINF    ,MAXNB    ,MAXNBF
+     &          ,MAXNN    ,NBAND    ,NBAND1   ,NCONVIFL ,NCONVITR
+     &          ,NFLAGS   ,NOPTS    ,NPARALG  ,NPBFL    ,NPBMX
+     &          ,NPBTP    ,NPPEL    ,NPPNP    ,NTYPAR   ,NUMEL
+     &          ,NUMNP    ,NWRITE   ,IDESC_COUPL
 
       INTEGER*4::IAD_D(2*MAXNB,2*NUMNP)       ,IAD_S(MAXNB,NUMNP)
      &          ,IADD_D(2*NUMNP)              ,IADN_D(2*NUMNP)
@@ -111,7 +111,10 @@ C------------------------- Internal
 
       IF (IFLAGS(3).NE.0) CALL IO_SUB('COUPLED_FLOW_TRANSPORT',0)
 
-C------------------------- States if the steady state is being solved at
+C------------------------- Coupled matrix not factorized.      
+      IDESC_COUPL = 2
+
+C-------------------------States if the steady state is being solved at
 C------------------------- INTI = 0.
 
       !IOINITSS = INTI.EQ.0 .AND. IOTRS.EQ.0 .AND. IORTS.EQ.0
@@ -132,9 +135,9 @@ C------------------------- ..."global" iteration counters are incremented,
 
 
 C------------------------- ...if we use Newton's method, one that
-C------------------------- solves flow and transport toghether...
-      
-          IF (LINMET(3,2).EQ.2) THEN
+C------------------------- solves flow and transport toghether or
+C------------------------- inverse proble with variable density is solved...      
+          IF (LINMET(3,2).EQ.2 .OR. IOINV.EQ.3) THEN
 
               ALLOCATE (DBTRADTRA(NUMNP))
               DBTRADTRA = 0D0
@@ -147,7 +150,7 @@ C------------------------- solves flow and transport toghether...
 C------------------------- the system is assembled and solved,
 
               CALL ASSEMBLE_LHS_COUPLED
-     &          (A_COUPL_DSC    ,AFLU     ,ATRA     ,CFLU     ,dbfludflu
+     &          (A_COUPL_DSC    ,AFLU     ,ATRA    ,CFLU,      DBFLUDFLU
      &          ,DBFLUDTRA,DBTRADTRA
      &          ,DFLU     ,DFLUDFLU ,DFLUDTRA
      &          ,DTRA    ,DTRADFLU 
@@ -226,28 +229,32 @@ C------------------------- Prescribed head and concentration boundary conditions
 
               END IF !IFLAGS(26).GT.0
 
+C------------------------- Direct problem if we use Newton's method, one that
+C------------------------- solves flow and transport toghether.      
+              IF (LINMET(3,2).EQ.2) THEN 
 
-              CALL SOLVE
-     &            (IA_COUPLED_DSC_ROWS,IA_COUPLED_DSC_COLS,2*NUMNP
-     &            ,2             ,IPAR_DIR(21)  ,IDIMWORK
-     &            ,IODIRECT      ,3             ,INTI
-     &            ,IPAR_DIR(18)  ,IPAR_DIR(22)  ,0
-     &            ,ITERM         ,IPAR_DIR(15)  ,MAINF
-     &            ,2*NBAND1      ,2*IPAR_DIR(24),IPAR_DIR(20)
-     &            ,IPAR_DIR(17)  ,IPAR_DIR(16)  ,PAR_DIR(36)
-     &            ,PAR_DIR(37)   ,PAR_DIR(38)   ,A_COUPL_DSC
-     &            ,A_COUPL_DSCF  ,BCOUPLED      ,IAD_D
-     &            ,IADD_D        ,IADN_D        ,IAFD_D
-     &            ,IAFDD_D       ,IAFDN_D       ,WORK
-     &            ,SOLUTION)
+                  CALL SOLVE
+     &                (IA_COUPLED_DSC_ROWS,IA_COUPLED_DSC_COLS,2*NUMNP
+     &                ,2             ,IPAR_DIR(21)  ,IDIMWORK
+     &                ,IODIRECT      ,3             ,INTI
+     &                ,IPAR_DIR(18)  ,IPAR_DIR(22)  ,0
+     &                ,ITERM         ,IPAR_DIR(15)  ,MAINF
+     &                ,2*NBAND1      ,2*IPAR_DIR(24),IPAR_DIR(20)
+     &                ,IPAR_DIR(17)  ,IPAR_DIR(16)  ,PAR_DIR(36)
+     &                ,PAR_DIR(37)   ,PAR_DIR(38)   ,A_COUPL_DSC
+     &                ,A_COUPL_DSCF  ,BCOUPLED      ,IAD_D
+     &                ,IADD_D        ,IADN_D        ,IAFD_D
+     &                ,IAFDD_D       ,IAFDN_D       ,WORK
+     &                ,SOLUTION)
 
-
+C-------------------------Coupled matrix factorized (useful in jac_coupled)
+                  IDESC_COUPL = 1
 C------------------------- convergence and divergence for flow
 C------------------------- and transport is checked,
 
 C------------------------- Updates flow variable and computes increments.
 
-              CALL UPDATE_STATE_VARIABLE
+                  CALL UPDATE_STATE_VARIABLE
      &        (DELTAH_SJ  ,DUMMY     ,DELTAHOLD ,DRELHMX    ,PAR_DIR(11) 
      &        ,0          ,IDELHGL   ,IDELHMAX  ,IOFLLI     ,1
      &        ,IODENS     ,1         ,NUMNP     ,PAR_DIR(8) ,DELTAITER
@@ -289,7 +296,8 @@ C------------------------- Computes maximum resid. (tpt. variable)
      &            ,IA_COUPLED_DSC_ROWS,ITYPACOUPLDSC      ,HCALIT
      &            ,SOLUTION ,LMXNDL   ,1) 
 
-          END IF ! (LINMET(3,2).EQ.2)
+               END IF ! (LINMET(3,2).EQ.2)
+          END IF ! (LINMET(3,2).EQ.2 .OR. IOINV.EQ.3)
 
 
 C------------------------- If we use picard, 

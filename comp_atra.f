@@ -345,13 +345,15 @@ C------------------------- if there is dispersivity, and velocity is not null.
 
 
 C------------------------- Derivatives of ATRA w.r.t. state variables.
-C------------------------- Only if Newton's method is used.
+C------------------------- Only if Newton's method is used
+C------------------------- or inverse problem with variable density.
        
-          IF (LINMET(2,2).EQ.2.OR.LINMET(3,2).EQ.2) THEN
+          IF (LINMET(2,2).EQ.2 .OR. LINMET(3,2).EQ.2 .OR.
+     &        (IODENS.EQ.1 .AND. IOINV.EQ.3)) THEN
 
               IOCALCDEVF = 0
 
-              IF(LINMET(3,2).EQ.2) THEN
+              IF(LINMET(3,2).EQ.2.OR.(IODENS.EQ.1.AND.IOINV.EQ.3)) THEN
                   IOCALCDEVF=1  !Calculate dtradflu also
               END IF
 
@@ -365,7 +367,7 @@ C------------------------- Only if Newton's method is used.
      &           ,THETAT   ,WATVOL  ,WSPECHEAT ,WTHERMCON)
 
 
-          END IF !LINMET(2,2).EQ.2.OR.LINMET(3,2).EQ.2
+          END IF !LINMET(2,2).EQ.2.OR.LINMET(3,2).EQ.2 ...
 
       END DO ! L=1,NUMEL
 

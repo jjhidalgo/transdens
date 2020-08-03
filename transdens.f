@@ -390,8 +390,11 @@ c-------------- factorized flow matrix for watsolv
 
 C---------------solution vector
           IDSOLUTION = NOLD
-          NOLD = NOLD + (ICAN_CN+1)*NUMNP
-
+          IF (IODENS_INI.EQ.1 .AND. IOINV.EQ.3) THEN
+             NOLD = NOLD + 2*NUMNP
+          ELSE
+              NOLD = NOLD + (ICAN_CN+1)*NUMNP
+          END IF
 C--------------- Inverse problem related arrays
 
           IDDERH=NOLD             !DERH
@@ -752,7 +755,7 @@ C--------------- FLOW
 
           IDDBFLUDTRA=NOLD                             !DBFLUDTRA
 
-          IF (IODENS_INI.EQ.1 .AND. ICAN_CN.EQ.1) THEN
+          IF (IODENS_INI.EQ.1 .AND. (ICAN_CN.EQ.1 .OR. IOINV.EQ.3)) THEN
 
               NOLD = IDDBFLUDTRA+NUMNP
               IDDERVISC = NOLD
@@ -823,9 +826,9 @@ C--------------- Transport
 
 C---------------Coupled flow and transport
        IDA_COUPLED_DSC=NOLD
-       IF (IODENS_INI.EQ.1 .AND. ICAN_CN.GT.0) THEN  !if the coupled system is
-                                              !going to be solved
-
+       IF (IODENS_INI.EQ.1 .AND. (ICAN_CN.GT.0 .OR. IOINV.EQ.3)) THEN  !if the coupled system is
+                                                                       !going to be solved or
+                                                                       !inverse prob. with variable density.
            NOLD = IDA_COUPLED_DSC +  IA_COUPLED_DSC_ROWS
      ;            *IA_COUPLED_DSC_COLS
 

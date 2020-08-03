@@ -73,7 +73,8 @@ C------------------------- External
 
        END IF !IOVRWC.LE.1
           
-       IF (LINMET(3,2).EQ.2 .OR. IOINV.EQ.1) THEN
+       IF (LINMET(3,2).EQ.2 .OR. IOINV.EQ.1 .OR.
+     &     (IODENS.EQ.1 .AND. IOINV.EQ.3)) THEN
 
           CALL COMP_DER_DTRA
      &        (AREA     ,BETAC    ,CAUX1    ,CAUX2    ,CREF
@@ -82,7 +83,7 @@ C------------------------- External
      &        ,LMXNDL   ,LNNDEL   ,NUMEL    ,NUMNP    ,THETAT
      &        ,WATVOL)
 
-       END IF !LINMET(3,2).EQ.2 .OR. IOINV.EQ.1
+       END IF !LINMET(3,2).EQ.2 .OR. IOINV.EQ.1 .OR. (IODENS.EQ.1 .AND. IOINV.EQ.3)
 
        END SUBROUTINE COMP_DTRA
 
